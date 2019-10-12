@@ -1,0 +1,13 @@
+[{"Базы данных NoSQL": ["redis", "mongodb", "cassandra", "hbase", "influxdb"]},
+  {"Базы данных SQL":  ["mysql","postgre", "sqlite", "mariadb", "oracle", "clickhouse"]},
+  {"Язык программирования":  ["python", "java", "javascript",  "typescript",  "php",  "ruby", "r",  "c", "c++", "c#", "assembler", "golang", "swift", "kotlin"]},
+  {"Фреймворки (back-end)": ["django", "flask", "tornado", "pytest", "unittest", "pyramid", "spring", "vue", "node.js", "kohana", "laravel", "zend", "aiohttp"]},
+  {"Фреймворки (front-end)": ["extjs", "bootstrap", "react", "selenium", "yii"]},
+  {"Фреймворки (data-science)": ["scikit-learn", "spark", "numpy", "pandas", "scipy", "matplotlib", "tensorflow", "pytorch", "scrapy", "beautifulsoup"]},
+  {"Инструменты (back-end)": ["nginx",  "memcached", "tomcat", "apache", "haproxy", "rabbitmq", "activemq", "celery"]},
+  {"Инструменты (front-end)": ["kafka", "elasticsearch", "kibana", "jmeter", "html", "css", "jquery", "ajax", "amp", "ec2", "redux", "fabric"]},
+  {"Инструменты (data-science)": ["jupyter", "matlab", "keras", "tableau"]},
+  {"Автоматизация": ["ansible", "docker", "chef", "hadoop", "zookeeper", "consul", "zabbix", "puppet", "jenkins", "kubernetes", "bamboo", "teamcity", "saltstack", "grafana", "prometheus", "postfix", "garden", "maven"]},
+  {"API testing":  ["soapui", "zeep", "postman", "odata", "awx", "graphql", "jmeter", "drf"]},
+  {"Системы контроля версий": ["github", "gitlab", "bitbucket", "mercurial", "svn"]},
+  {"ORM": ["sqlalchemy", "mongoengine", "hibernate"]}]

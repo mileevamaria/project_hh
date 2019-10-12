@@ -1,0 +1,9 @@
+config.py
+__pycache__/
+.vscode/
+venv/
+*.log
+*.cfg
+hh_log.txt
+.scrapy/
+.idea/
