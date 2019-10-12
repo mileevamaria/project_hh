@@ -24,27 +24,18 @@
                     </div>
                     {% endif %}
                 {% endwith %}
-                <h3>Фильтер по навыкам</h3>
-                {% for c in categories %}
-                <p>{{ c.category }}</p>
-                    {% for s in skills %}
-                        {% if s.category == c.category %}
-                        <ul>
-                            <li>{{ s.skill }}</li>
-                        </ul>
-                        {% endif %}
-                    {% endfor %}
-                <hr />
-                {% endfor %}
-            </div>
-            <div class="col-8">
-                <h3>Вакансии</h3>
-                {% for v in vacancies %}
-                <h4><a href="{{ v.vacancy_url }}">{{ v.vacancy_name }}</a></h4>
-                <p>{{ v.vacancy_published_at }}</p>
-                <p>{{ v.requirements_text }}</p>
-                <hr />
-                {% endfor %}
+                <form action="{{ url_for('process_login') }}" method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.username.label }}
+                        {{ form.username() }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password.label }}
+                        {{ form.password() }}
+                    </div>
+                    <p>{{ form.submit() }}</p>
+                </form>
             </div>
         </div>
     </div>
