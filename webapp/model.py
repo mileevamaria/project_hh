@@ -67,6 +67,9 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(64), index=True, unique=True)
     password = db.Column(db.String(128))
     role = db.Column(db.String(10), index=True)
+    first_name = db.Column(db.String(80), nullable=True)
+    last_name = db.Column(db.String(80), nullable=True)
+    city = db.Column(db.String(80), nullable=True)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -80,3 +83,31 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+
+class ProfileSkills(db.Model):
+    __tablename__ = "profile_skills"
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), nullable=False)
+    skills_nosql = db.Column(db.String(32), nullable=True)
+    skills_sql = db.Column(db.String(32), nullable=True)
+    skills_language = db.Column(db.String(32), nullable=True)
+    skills_frame_back = db.Column(db.String(32), nullable=True)
+    skills_frame_front = db.Column(db.String(32), nullable=True)
+    skills_frame_ds = db.Column(db.String(32), nullable=True)
+    skills_tools_back = db.Column(db.String(32), nullable=True)
+    skills_tools_front = db.Column(db.String(32), nullable=True)
+    skills_tools_ds = db.Column(db.String(32), nullable=True)
+    skills_automat = db.Column(db.String(32), nullable=True)
+    skills_api_test = db.Column(db.String(32), nullable=True)
+    skills_vcs = db.Column(db.String(32), nullable=True)
+    skills_orm = db.Column(db.String(32), nullable=True)
+
+
+class Favourite(db.Model):
+    __tablename__ = "favourite_vacancies"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), nullable=False)
+    fav_vac_url = db.Column(db.TEXT, nullable=False)
+    fav_vac_title = db.Column(db.TEXT, nullable=False)

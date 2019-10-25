@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
+            <h3>Избранные вакансии</h3>
+            </br>
+            {% if favourites %}
+                {% for favourite in favourites %}
+                <a href="{{ favourite.fav_vac_url }}"><h4>{{ favourite.fav_vac_title }}</h4></a>
+                <a href="{{ url_for('process_delete', id=favourite.id) }}" class="btn btn-outline-dark btn-sm" role="button">
+                      Удалить из избранного
+                    </a>
+                <hr />
+                {% endfor %}
+            {% else  %}
+            <p>Вы не добавили ни одну вакансию в избранное</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}
