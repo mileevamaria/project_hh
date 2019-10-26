@@ -2,7 +2,7 @@ from flask import Flask, render_template, flash, redirect, url_for, request
 
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from webapp.model import db, HeadHunterVacancy, Category, Skills, User, Favourite
-from webapp.forms import LoginForm, ProfileForm, VacancyForm
+from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """
@@ -73,6 +73,32 @@ def create_app():
         flash('Вы успешно разлогинились')
         return redirect(url_for('index'))
 
+    @app.route('/register')
+    def register():
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+        title = 'Регистрация'
+        registration_form = RegistrationForm()
+        return render_template('registration.html', page_title=title, form=registration_form)
+
+    @app.route('/process-reg', methods=['POST'])
+    def process_reg():
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            new_user = User(username=form.username.data, email=form.email.data, role='user',
+                            first_name=form.first_name.data, last_name=form.last_name.data, city=form.city.data)
+            new_user.set_password(form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Вы успешно зарегистрировались')
+            return redirect(url_for('login'))
+
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash('Ошибка в поле {}: {}'.format(getattr(form, field).label.text, error))
+            return redirect(url_for('register'))
+
     @app.route('/admin')
     @login_required
     def admin_index():
@@ -95,6 +121,27 @@ def create_app():
         title = "Избранные вакансии"
         favourites = Favourite.query.filter(Favourite.username == current_user.username).all()
         return render_template('favourite.html', page_title=title, favourites=favourites)
+
+    @app.route('/profile/change_password')
+    def change_password():
+        form = ChangePasswordForm()
+        title = 'Изменить пароль'
+        return render_template('change_password.html', page_title=title, form=form)
+
+    @app.route('/process-change-password', methods=['POST'])
+    def process_change_password():
+        form = ChangePasswordForm()
+        user = User.query.filter(User.username == current_user.username).first()
+        if form.validate_on_submit() and user.check_password(form.old_password.data):
+            user.set_password(form.new_password.data)
+            db.session.commit()
+            flash('Пароль изменен')
+            return redirect(url_for('profile'))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash('Ошибка в поле {}: {}'.format(getattr(form, field).label.text, error))
+            return redirect(url_for('change_password'))
 
     @app.route('/process-delete/<int:id>', methods=['GET', 'POST'])
     @login_required

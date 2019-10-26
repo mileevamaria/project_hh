@@ -65,11 +65,12 @@ class Skills(db.Model):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(50))
     password = db.Column(db.String(128))
     role = db.Column(db.String(10), index=True)
-    first_name = db.Column(db.String(80), nullable=True)
-    last_name = db.Column(db.String(80), nullable=True)
-    city = db.Column(db.String(80), nullable=True)
+    first_name = db.Column(db.String(80), nullable=True, default='Имя')
+    last_name = db.Column(db.String(80), nullable=True, default='Фамилия')
+    city = db.Column(db.String(80), nullable=True, default='Город')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

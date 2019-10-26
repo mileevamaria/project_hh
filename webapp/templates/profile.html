@@ -34,7 +34,7 @@
             </form>
         </div>
         <div class="col-4">
-            <form>
+            <form action="{{ url_for('change_password') }}" method="GET">
                 <p>{{ form.change_password() }}</p>
             </form>
             <form action="{{ url_for('favourite') }}" method="GET">
