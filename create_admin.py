@@ -2,7 +2,7 @@ from getpass import getpass
 import sys
 
 from webapp import create_app
-from webapp.model import db, User, UserInfo
+from webapp.model import db, User
 
 app = create_app()
 
@@ -21,11 +21,9 @@ with app.app_context():
         sys.exit(0)
 
     new_user = User(username=username, role='admin')
-    new_user_1 = UserInfo(username=username)
     new_user.set_password(password1)
 
     db.session.add(new_user)
-    db.session.add(new_user_1)
     db.session.commit()
 
     print('Создан пользователь с id={}'.format(new_user.id))

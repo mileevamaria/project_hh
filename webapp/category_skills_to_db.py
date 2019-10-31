@@ -1,5 +1,5 @@
 import json
-from webapp.model import db, HeadHunterVacancy, Category, Skills
+from webapp.model import db, Category, Skill
 
 
 def get_category():
@@ -35,10 +35,8 @@ def save_category(category):
         db.session.add(category_add)
         db.session.commit()
 
-
-def save_skill(category, skill):
-    skill_exists = Skills.query.filter(Skills.skill == skill).count()
+    skill_exists = Skill.query.filter(Skill.skill == skill).count()
     if not skill_exists:
-        skill_add = Skills(category=category, skill=skill)
+        skill_add = Skill(category=category, skill=skill)
         db.session.add(skill_add)
         db.session.commit()

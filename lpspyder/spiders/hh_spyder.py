@@ -16,6 +16,7 @@ class HeadHunterSpyder(scrapy.Spider):
             'lpspyder.pipelines.CleanDescriptionPipline': 300,
             'lpspyder.pipelines.LangDetectionPipline': 301,
             'lpspyder.pipelines.SortCleanTextPipline': 302,
+            'lpspyder.pipelines.CleanDatetimePipline': 303,
             'lpspyder.pipelines.MysqlInsertHeadHunterVacancyPipline': 313,
         },
         'LOG_FILE': 'hh_log.txt',

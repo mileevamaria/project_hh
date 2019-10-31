@@ -87,6 +87,16 @@ class CleanDescriptionPipline(object):
             return item
 
 
+class CleanDatetimePipline(object):
+    def process_item(self, item, spider):
+        if item['vacancy_published_at']:
+            item['vacancy_published_at'] = re.sub(
+                r'T', ' ', item['vacancy_published_at'])
+            item['vacancy_published_at'] = item['vacancy_published_at'][:(len(item['vacancy_published_at'])-10)]
+            return item
+
+
+
 class LangDetectionPipline(object):
     def process_item(self, item, spyder):
         if item['vacancy_text_clean']:

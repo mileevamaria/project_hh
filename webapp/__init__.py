@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for, request
 
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
-from webapp.model import db, HeadHunterVacancy, Category, Skills, User, Favourite
+from webapp.model import db, Vacancy, Category, Skill, User, Favourite
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 
 
@@ -25,20 +25,19 @@ def create_app():
     def index():
         title = "Вакансии для разработчиков"
         page = request.args.get('page', 1, type=int)
-        vacancies = HeadHunterVacancy.query.paginate(page=page, per_page=20)
+        vacancies = Vacancy.query.paginate(page=page, per_page=20)
         return render_template('index.html', page_title=title, vacancies=vacancies)
 
     @app.route('/process-favourite/<int:id>', methods=['GET', 'POST'])
     @login_required
     def process_favourite(id):
-        vacancy = HeadHunterVacancy.query.get_or_404(id)
-        vacancy_exists = Favourite.query.filter(Favourite.fav_vac_url == vacancy.vacancy_url,
-                                                        Favourite.username == current_user.username).count()
+        vacancy = Vacancy.query.get_or_404(id)
+        vacancy_exists = Favourite.query.filter(Favourite.vacancy_id == vacancy.id,
+                                                Favourite.user_id == current_user.id).first()
         if vacancy_exists:
             flash('Вы уже добавляли эту вакансию в избранное')
         else:
-            vacancy_add = Favourite(username=current_user.username, fav_vac_url=vacancy.vacancy_url,
-                                    fav_vac_title=vacancy.vacancy_name)
+            vacancy_add = Favourite(vacancy_favourite=vacancy, user_favourite=current_user)
             db.session.add(vacancy_add)
             db.session.commit()
             flash('Вакансия добавлена в избранное')
@@ -85,8 +84,13 @@ def create_app():
     def process_reg():
         form = RegistrationForm()
         if form.validate_on_submit():
-            new_user = User(username=form.username.data, email=form.email.data, role='user',
-                            first_name=form.first_name.data, last_name=form.last_name.data, city=form.city.data)
+            new_user = User(username=form.username.data, email=form.email.data, role='user')
+            if form.first_name.data:
+                new_user.first_name = form.first_name.data
+            if form.last_name.data:
+                new_user.last_name = form.last_name.data
+            if form.city.data:
+                new_user.city = form.city.data
             new_user.set_password(form.password.data)
             db.session.add(new_user)
             db.session.commit()
@@ -97,7 +101,8 @@ def create_app():
             for field, errors in form.errors.items():
                 for error in errors:
                     flash('Ошибка в поле {}: {}'.format(getattr(form, field).label.text, error))
-            return redirect(url_for('register'))
+
+        return redirect(url_for('register'))
 
     @app.route('/admin')
     @login_required
@@ -111,15 +116,31 @@ def create_app():
     @login_required
     def profile():
         title = "Профиль пользователя"
-        user_info = User.query.filter(User.username == current_user.username).first()
+        user = User.query.filter(User.username == current_user.username).first()
         form = ProfileForm()
-        return render_template('profile.html', page_title=title, form=form, user_info=user_info)
+        return render_template('profile.html', page_title=title, form=form, user=user)
+
+    @app.route('/process-save-changes', methods=['POST'])
+    def process_save_changes():
+        form = ProfileForm()
+        user = User.query.filter(User.username == current_user.username).first()
+        if form.validate_on_submit():
+            if form.first_name.data:
+                user.first_name = form.first_name.data
+            if form.last_name.data:
+                user.last_name = form.last_name.data
+            if form.city.data:
+                user.city = form.city.data
+            db.session.commit()
+
+        flash('Изменения сохранены')
+        return redirect(url_for('profile'))
 
     @app.route('/profile/favourite', methods=['GET', 'POST'])
     @login_required
     def favourite():
         title = "Избранные вакансии"
-        favourites = Favourite.query.filter(Favourite.username == current_user.username).all()
+        favourites = Favourite.query.filter(Favourite.user_id == current_user.id).all()
         return render_template('favourite.html', page_title=title, favourites=favourites)
 
     @app.route('/profile/change_password')
@@ -137,11 +158,16 @@ def create_app():
             db.session.commit()
             flash('Пароль изменен')
             return redirect(url_for('profile'))
+
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    flash('Ошибка в поле {}: {}'.format(getattr(form, field).label.text, error))
-            return redirect(url_for('change_password'))
+            if not user.check_password(form.old_password.data):
+                flash('Неправильный текущий пароль')
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        flash('Ошибка в поле {}: {}'.format(getattr(form, field).label.text, error))
+
+        return redirect(url_for('change_password'))
 
     @app.route('/process-delete/<int:id>', methods=['GET', 'POST'])
     @login_required

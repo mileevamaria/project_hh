@@ -16,7 +16,7 @@
             </br>
             {% if favourites %}
                 {% for favourite in favourites %}
-                <a href="{{ favourite.fav_vac_url }}"><h4>{{ favourite.fav_vac_title }}</h4></a>
+                <a href="{{ favourite.vacancy_favourite.vacancy_url }}"><h4>{{ favourite.vacancy_favourite.vacancy_name }}</h4></a>
                 <a href="{{ url_for('process_delete', id=favourite.id) }}" class="btn btn-outline-dark btn-sm" role="button">
                       Удалить из избранного
                     </a>

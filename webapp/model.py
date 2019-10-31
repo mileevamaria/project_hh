@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 db = SQLAlchemy()
 
 
-class HeadHunterVacancy(db.Model):
+class Vacancy(db.Model):
     __tablename__ = "vacancies"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -42,35 +42,25 @@ class HeadHunterVacancy(db.Model):
     company_offer_text = db.Column(db.TEXT, nullable=True)
     will_plus_text_value = db.Column(db.TEXT, nullable=True)
     will_plus_text = db.Column(db.TEXT, nullable=True)
-    vacancy_published_at = db.Column(db.TEXT, nullable=True)
+    vacancy_published_at = db.Column(db.TIMESTAMP, nullable=True)
     parsed_at = db.Column(db.TIMESTAMP, server_default=func.now())
 
-
-class Category(db.Model):
-    __tablename__ = "categories"
-
-    id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.TEXT, nullable=False)
-
-
-class Skills(db.Model):
-    __tablename__ = "skills"
-
-    id = db.Column(db.Integer, primary_key=True)
-    skill = db.Column(db.TEXT, nullable=True)
-    category = db.Column(db.TEXT, nullable=True)
-    count = db.Column(db.Integer, nullable=True)
+    favourites = db.relationship('Favourite', backref='vacancy_favourite')
+    grade = db.relationship('VacancyGrade', backref='vacancy_grade')
 
 
 class User(db.Model, UserMixin):
+    __tablename__ = "users"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(50))
     password = db.Column(db.String(128))
     role = db.Column(db.String(10), index=True)
-    first_name = db.Column(db.String(80), nullable=True, default='Имя')
-    last_name = db.Column(db.String(80), nullable=True, default='Фамилия')
-    city = db.Column(db.String(80), nullable=True, default='Город')
+    first_name = db.Column(db.String(80), nullable=True, server_default='Имя')
+    last_name = db.Column(db.String(80), nullable=True, server_default='Фамилия')
+    city = db.Column(db.String(80), nullable=True, server_default='Город')
+    favourites = db.relationship('Favourite', backref='user_favourite')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -86,29 +76,43 @@ class User(db.Model, UserMixin):
         return '<User {}>'.format(self.username)
 
 
-class ProfileSkills(db.Model):
-    __tablename__ = "profile_skills"
+class Category(db.Model):
+    __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), nullable=False)
-    skills_nosql = db.Column(db.String(32), nullable=True)
-    skills_sql = db.Column(db.String(32), nullable=True)
-    skills_language = db.Column(db.String(32), nullable=True)
-    skills_frame_back = db.Column(db.String(32), nullable=True)
-    skills_frame_front = db.Column(db.String(32), nullable=True)
-    skills_frame_ds = db.Column(db.String(32), nullable=True)
-    skills_tools_back = db.Column(db.String(32), nullable=True)
-    skills_tools_front = db.Column(db.String(32), nullable=True)
-    skills_tools_ds = db.Column(db.String(32), nullable=True)
-    skills_automat = db.Column(db.String(32), nullable=True)
-    skills_api_test = db.Column(db.String(32), nullable=True)
-    skills_vcs = db.Column(db.String(32), nullable=True)
-    skills_orm = db.Column(db.String(32), nullable=True)
+    category = db.Column(db.TEXT, nullable=False)
+    skills = db.relationship('Skill', backref='category_skill')
+
+
+class Skill(db.Model):
+    __tablename__ = "skills"
+
+    id = db.Column(db.Integer, primary_key=True)
+    skill = db.Column(db.TEXT, nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    count = db.Column(db.Integer, nullable=True)
+
+
+class Specialization(db.Model):
+    __tablename__ = "specializations"
+
+    id = db.Column(db.Integer, primary_key=True)
+    specialization = db.Column(db.TEXT, nullable=False)
+    vacancies = db.relationship('VacancyGrade', backref='specialization_grade')
 
 
 class Favourite(db.Model):
     __tablename__ = "favourite_vacancies"
+
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), nullable=False)
-    fav_vac_url = db.Column(db.TEXT, nullable=False)
-    fav_vac_title = db.Column(db.TEXT, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    vacancy_id = db.Column(db.Integer, db.ForeignKey('vacancies.id'), nullable=False)
+
+
+class VacancyGrade(db.Model):
+    __tablename__ = "vacancies_grade"
+
+    id = db.Column(db.Integer, primary_key=True)
+    vacancy_id = db.Column(db.Integer, db.ForeignKey('vacancies.id'), nullable=False)
+    specialization_id = db.Column(db.Integer, db.ForeignKey('specializations.id'), nullable=False)
+    grade = db.Column(db.Integer, nullable=True)
