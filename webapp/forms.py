@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms import StringField, PasswordField, SubmitField, SelectMultipleField
+from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
-from webapp.model import Skill, User
+from wtforms.widgets import ListWidget, CheckboxInput, TableWidget
+from webapp.model import Category, User
 
 
 class LoginForm(FlaskForm):
@@ -41,6 +42,11 @@ class ChangePasswordForm(FlaskForm):
     submit = SubmitField('Изменить пароль!', render_kw={"class": "btn btn-primary"})
 
 
+class MultiCheckboxField(QuerySelectMultipleField):
+    widget = ListWidget(prefix_label=False)
+    option_widget = CheckboxInput()
+
+
 class ProfileForm(FlaskForm):
     username = StringField('Никнейм', render_kw={"class": "form-control", "readonly": ''})
     email = StringField('Почта', render_kw={"class": "form-control", "readonly": ''})
@@ -51,12 +57,10 @@ class ProfileForm(FlaskForm):
     relevant = SubmitField('Посмотреть подходящие вакансии', render_kw={"class": "btn btn-link btn-lg"})
     change_password = SubmitField('Изменить пароль', render_kw={"class": "btn btn-link btn-lg"})
     save_changes = SubmitField('Сохранить изменения', render_kw={"class": "btn btn-primary"})
+    skills_nosql = MultiCheckboxField('Базы NoSQL', query_factory=lambda:
+                                    (Category.query.filter(Category.id == 1).first()).catskills, get_label="name")
 
 
-class SkillsForm(FlaskForm):
-    skills_nosql = QuerySelectField('Базы NoSQL',
-                                    query_factory=lambda: Skill.query.filter(
-                                        Skill.category == 'Базы данных NoSQL').all(),
-                                    get_label="skill")
+
 
 

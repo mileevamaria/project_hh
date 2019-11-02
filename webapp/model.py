@@ -46,7 +46,11 @@ class Vacancy(db.Model):
     parsed_at = db.Column(db.TIMESTAMP, server_default=func.now())
 
     favourites = db.relationship('Favourite', backref='vacancy_favourite')
-    grade = db.relationship('VacancyGrade', backref='vacancy_grade')
+
+
+assoc_skill_user = db.Table("assoc_skill_user",
+                       db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
+                       db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")))
 
 
 class User(db.Model, UserMixin):
@@ -60,7 +64,7 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(80), nullable=True, server_default='Имя')
     last_name = db.Column(db.String(80), nullable=True, server_default='Фамилия')
     city = db.Column(db.String(80), nullable=True, server_default='Город')
-    favourites = db.relationship('Favourite', backref='user_favourite')
+    user = db.relationship('Skill', secondary=assoc_skill_user, backref=db.backref('user', lazy='dynamic'))
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -76,31 +80,6 @@ class User(db.Model, UserMixin):
         return '<User {}>'.format(self.username)
 
 
-class Category(db.Model):
-    __tablename__ = "categories"
-
-    id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.TEXT, nullable=False)
-    skills = db.relationship('Skill', backref='category_skill')
-
-
-class Skill(db.Model):
-    __tablename__ = "skills"
-
-    id = db.Column(db.Integer, primary_key=True)
-    skill = db.Column(db.TEXT, nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-    count = db.Column(db.Integer, nullable=True)
-
-
-class Specialization(db.Model):
-    __tablename__ = "specializations"
-
-    id = db.Column(db.Integer, primary_key=True)
-    specialization = db.Column(db.TEXT, nullable=False)
-    vacancies = db.relationship('VacancyGrade', backref='specialization_grade')
-
-
 class Favourite(db.Model):
     __tablename__ = "favourite_vacancies"
 
@@ -109,10 +88,21 @@ class Favourite(db.Model):
     vacancy_id = db.Column(db.Integer, db.ForeignKey('vacancies.id'), nullable=False)
 
 
-class VacancyGrade(db.Model):
-    __tablename__ = "vacancies_grade"
+assoc_skill_category = db.Table("assoc_skill_category",
+                       db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")),
+                       db.Column("category_id", db.Integer, db.ForeignKey("categories.id")))
+
+
+class Category(db.Model):
+    __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True)
-    vacancy_id = db.Column(db.Integer, db.ForeignKey('vacancies.id'), nullable=False)
-    specialization_id = db.Column(db.Integer, db.ForeignKey('specializations.id'), nullable=False)
-    grade = db.Column(db.Integer, nullable=True)
+    name = db.Column(db.String(100), unique=True)
+
+
+class Skill(db.Model):
+    __tablename__ = "skills"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    category = db.relationship('Category', secondary=assoc_skill_category, backref=db.backref('catskills', lazy='dynamic'))

@@ -16,9 +16,13 @@
                 {% for vacancy in vacancies.items %}
                 <a href="{{ vacancy.vacancy_url }}"><h4>{{ vacancy.vacancy_name }}</h4></a>
                     <p>{{ vacancy.requirements_text }}</p>
+                    {% if vacancy.id in favourite %}
+                    <button type="button" class="btn btn-sm btn-dark" disabled>В избранном</button>
+                    {% else %}
                     <a href="{{ url_for('process_favourite', id=vacancy.id) }}" class="btn btn-outline-dark btn-sm" role="button">
                       Добавить в избранное
                     </a>
+                    {% endif %}
                 <hr />
             {% endfor %}
             {% for page_num in vacancies.iter_pages() %}

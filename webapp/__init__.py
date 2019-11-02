@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for, request
-
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
-from webapp.model import db, Vacancy, Category, Skill, User, Favourite
+from flask_migrate import Migrate
+from webapp.model import db, Vacancy, User, Favourite, Category, Skill
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 
 
@@ -17,6 +17,8 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'login'
 
+    migrate = Migrate(app, db)
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(user_id)
@@ -26,7 +28,12 @@ def create_app():
         title = "Вакансии для разработчиков"
         page = request.args.get('page', 1, type=int)
         vacancies = Vacancy.query.paginate(page=page, per_page=20)
-        return render_template('index.html', page_title=title, vacancies=vacancies)
+        favourite = Favourite.query.filter(Favourite.user_id == current_user.id).all()
+
+        favourite_vacancy = []
+        for favour in favourite:
+            favourite_vacancy.append(favour.vacancy_id)
+        return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy)
 
     @app.route('/process-favourite/<int:id>', methods=['GET', 'POST'])
     @login_required
@@ -116,12 +123,13 @@ def create_app():
     @login_required
     def profile():
         title = "Профиль пользователя"
-        user = User.query.filter(User.username == current_user.username).first()
         form = ProfileForm()
+        user = User.query.filter(User.username == current_user.username).first()
+
         return render_template('profile.html', page_title=title, form=form, user=user)
 
-    @app.route('/process-save-changes', methods=['POST'])
-    def process_save_changes():
+    @app.route('/process-save-changes-person', methods=['POST'])
+    def process_save_changes_person():
         form = ProfileForm()
         user = User.query.filter(User.username == current_user.username).first()
         if form.validate_on_submit():
@@ -132,7 +140,6 @@ def create_app():
             if form.city.data:
                 user.city = form.city.data
             db.session.commit()
-
         flash('Изменения сохранены')
         return redirect(url_for('profile'))
 
@@ -178,5 +185,17 @@ def create_app():
         flash('Вакансия удалена из избранного')
 
         return redirect(url_for('favourite'))
+
+    @app.route('/process-save-change-skills', methods=['POST'])
+    def process_save_change_skills():
+        form = ProfileForm()
+        if form.validate_on_submit():
+            user = User.query.filter(User.username == current_user.username).first()
+            for skill in form.skills_nosql.data:
+                skill.user.append(user)
+                db.session.commit()
+
+        flash('Изменения сохранены')
+        return redirect(url_for('profile'))
 
     return app
