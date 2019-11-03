@@ -32,13 +32,17 @@ def create_app():
         title = "Вакансии для разработчиков"
         page = request.args.get('page', 1, type=int)
         vacancies = Vacancy.query.paginate(page=page, per_page=20)
-        favourite = Favourite.query.filter(
-            Favourite.user_id == current_user.id).all()
 
-        favourite_vacancy = []
-        for favour in favourite:
-            favourite_vacancy.append(favour.vacancy_id)
-        return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy)
+        if current_user.is_authenticated:
+            favourite = Favourite.query.filter(
+                Favourite.user_id == current_user.id).all()
+            favourite_vacancy = []
+            for favour in favourite:
+                favourite_vacancy.append(favour.vacancy_id)
+            return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy)
+        else:
+            favourite_vacancy = []
+            return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy)
 
     @app.route('/process-favourite/<int:id>', methods=['GET', 'POST'])
     @login_required
