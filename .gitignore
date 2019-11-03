@@ -7,3 +7,4 @@ venv/
 hh_log.txt
 .scrapy/
 .idea/
+/vacancies.sql
