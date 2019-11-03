@@ -3,14 +3,18 @@ from flask_login import LoginManager, login_user, logout_user, current_user, log
 from flask_migrate import Migrate
 from webapp.model import db, Vacancy, User, Favourite, Category, Skill
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
-
+import os
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """
 
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_pyfile('config.py')
+    # app.config.from_pyfile('config.py')
+    SECRET_KEY = os.urandom(32)
+    app.config['SECRET_KEY'] = SECRET_KEY
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/lpproject'
     db.init_app(app)
 
     login_manager = LoginManager()
@@ -28,7 +32,8 @@ def create_app():
         title = "Вакансии для разработчиков"
         page = request.args.get('page', 1, type=int)
         vacancies = Vacancy.query.paginate(page=page, per_page=20)
-        favourite = Favourite.query.filter(Favourite.user_id == current_user.id).all()
+        favourite = Favourite.query.filter(
+            Favourite.user_id == current_user.id).all()
 
         favourite_vacancy = []
         for favour in favourite:
@@ -44,7 +49,8 @@ def create_app():
         if vacancy_exists:
             flash('Вы уже добавляли эту вакансию в избранное')
         else:
-            vacancy_add = Favourite(vacancy_favourite=vacancy, user_favourite=current_user)
+            vacancy_add = Favourite(
+                vacancy_favourite=vacancy, user_favourite=current_user)
             db.session.add(vacancy_add)
             db.session.commit()
             flash('Вакансия добавлена в избранное')
@@ -64,7 +70,8 @@ def create_app():
         form = LoginForm()
 
         if form.validate_on_submit():
-            user = User.query.filter(User.username == form.username.data).first()
+            user = User.query.filter(
+                User.username == form.username.data).first()
             if user and user.check_password(form.password.data):
                 login_user(user)
                 flash('Вы успешно вошли на сайт')
@@ -91,7 +98,8 @@ def create_app():
     def process_reg():
         form = RegistrationForm()
         if form.validate_on_submit():
-            new_user = User(username=form.username.data, email=form.email.data, role='user')
+            new_user = User(username=form.username.data,
+                            email=form.email.data, role='user')
             if form.first_name.data:
                 new_user.first_name = form.first_name.data
             if form.last_name.data:
@@ -107,7 +115,8 @@ def create_app():
         else:
             for field, errors in form.errors.items():
                 for error in errors:
-                    flash('Ошибка в поле {}: {}'.format(getattr(form, field).label.text, error))
+                    flash('Ошибка в поле {}: {}'.format(
+                        getattr(form, field).label.text, error))
 
         return redirect(url_for('register'))
 
@@ -124,14 +133,16 @@ def create_app():
     def profile():
         title = "Профиль пользователя"
         form = ProfileForm()
-        user = User.query.filter(User.username == current_user.username).first()
+        user = User.query.filter(
+            User.username == current_user.username).first()
 
         return render_template('profile.html', page_title=title, form=form, user=user)
 
     @app.route('/process-save-changes-person', methods=['POST'])
     def process_save_changes_person():
         form = ProfileForm()
-        user = User.query.filter(User.username == current_user.username).first()
+        user = User.query.filter(
+            User.username == current_user.username).first()
         if form.validate_on_submit():
             if form.first_name.data:
                 user.first_name = form.first_name.data
@@ -147,7 +158,8 @@ def create_app():
     @login_required
     def favourite():
         title = "Избранные вакансии"
-        favourites = Favourite.query.filter(Favourite.user_id == current_user.id).all()
+        favourites = Favourite.query.filter(
+            Favourite.user_id == current_user.id).all()
         return render_template('favourite.html', page_title=title, favourites=favourites)
 
     @app.route('/profile/change_password')
@@ -159,7 +171,8 @@ def create_app():
     @app.route('/process-change-password', methods=['POST'])
     def process_change_password():
         form = ChangePasswordForm()
-        user = User.query.filter(User.username == current_user.username).first()
+        user = User.query.filter(
+            User.username == current_user.username).first()
         if form.validate_on_submit() and user.check_password(form.old_password.data):
             user.set_password(form.new_password.data)
             db.session.commit()
@@ -172,7 +185,8 @@ def create_app():
             else:
                 for field, errors in form.errors.items():
                     for error in errors:
-                        flash('Ошибка в поле {}: {}'.format(getattr(form, field).label.text, error))
+                        flash('Ошибка в поле {}: {}'.format(
+                            getattr(form, field).label.text, error))
 
         return redirect(url_for('change_password'))
 
@@ -190,7 +204,8 @@ def create_app():
     def process_save_change_skills():
         form = ProfileForm()
         if form.validate_on_submit():
-            user = User.query.filter(User.username == current_user.username).first()
+            user = User.query.filter(
+                User.username == current_user.username).first()
             for skill in form.skills_nosql.data:
                 skill.user.append(user)
                 db.session.commit()

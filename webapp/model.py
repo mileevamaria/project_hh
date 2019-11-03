@@ -22,13 +22,13 @@ class Vacancy(db.Model):
     company_name = db.Column(db.TEXT, nullable=True)
     vacancy_expirience = db.Column(db.TEXT, nullable=True)
     vacancy_employment_type = db.Column(db.TEXT, nullable=True)
-    vacancy_text_dirty = db.Column(db.TEXT, nullable=True)
     vacancy_text_clean = db.Column(db.TEXT, nullable=True)
     vacancy_text_en = db.Column(db.TEXT, nullable=True)
     vacancy_key_skills = db.Column(db.TEXT, nullable=True)
     industry = db.Column(db.TEXT, nullable=True)
     language = db.Column(db.String(5), nullable=True)
-    vacancy_published_at = db.Column(db.TIMESTAMP, nullable=True)
+    vacancy_published_at = db.Column(db.TEXT, nullable=True)
+    vacancy_graded = db.Column(db.Boolean, default=0, nullable=False)
 
     favourites = db.relationship('Favourite', backref='vacancy_favourite')
 
