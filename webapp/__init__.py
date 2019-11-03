@@ -41,8 +41,7 @@ def create_app():
                 favourite_vacancy.append(favour.vacancy_id)
             return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy)
         else:
-            favourite_vacancy = []
-            return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy)
+            return render_template('index.html', page_title=title, vacancies=vacancies)
 
     @app.route('/process-favourite/<int:id>', methods=['GET', 'POST'])
     @login_required
