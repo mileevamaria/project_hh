@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('statistic',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('vacancy_count', sa.Integer(), nullable=True),
-                    sa.Column('languages', sa.JSON(), nullable=True),
+                    sa.Column('languages', sa.TEXT(), nullable=True),
                     sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text(
                         'CURRENT_TIMESTAMP'), nullable=False),
                     sa.PrimaryKeyConstraint('id')

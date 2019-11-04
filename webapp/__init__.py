@@ -4,7 +4,8 @@ from flask_migrate import Migrate
 from webapp.model import db, Vacancy, User, Favourite, Category, Skill
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 import os
-from webapp.statistic import set_statistic
+from webapp.statistic import set_statistic, get_languages, get_vacancies_count
+import json
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """
 
@@ -220,8 +221,13 @@ def create_app():
     @app.route('/statistic', methods=['GET'])
     def statistic():
         title = 'Статистика вакансий'
-        languages_stat = set_statistic()
+        vacancies_count = get_vacancies_count()
+        vacancies_count = json.dumps(vacancies_count)
 
-        return render_template('statistic.html', page_title=title, languages_stat=languages_stat)
+        languages_stat = get_languages()
+        lang_labels = json.dumps(languages_stat[0])
+        lang_stat = json.dumps(languages_stat[1])
+
+        return render_template('statistic.html', page_title=title, lang_labels=lang_labels, lang_stat=lang_stat, vacancies_count=vacancies_count)
 
     return app
