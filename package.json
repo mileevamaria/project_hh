@@ -1,0 +1,31 @@
+{
+  "name": "project_hh",
+  "version": "1.0.0",
+  "description": "Сайт о вакансиях для разработчиков",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4ertovo4ka/project_hh.git"
+  },
+  "author": "4ertov4ka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/4ertovo4ka/project_hh/issues"
+  },
+  "homepage": "https://github.com/4ertovo4ka/project_hh#readme",
+  "devDependencies": {
+    "bulma": "^0.8.0",
+    "css-loader": "^3.2.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}

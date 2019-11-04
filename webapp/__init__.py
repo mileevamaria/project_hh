@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from webapp.model import db, Vacancy, User, Favourite, Category, Skill
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 import os
+from webapp.statistic import vacancy_count, languages
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """
 
@@ -215,5 +216,13 @@ def create_app():
 
         flash('Изменения сохранены')
         return redirect(url_for('profile'))
+
+    @app.route('/statistic', methods=['GET'])
+    def statistic():
+        title = 'Статистика вакансий'
+        vacancies_count = vacancy_count()
+        languages_stat = languages()
+
+        return render_template('statistic.html', page_title=title, vacancies_count=vacancies_count, languages_stat=languages_stat)
 
     return app

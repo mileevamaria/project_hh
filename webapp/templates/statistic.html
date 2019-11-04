@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href={{ url_for('static', filename='css/style.css') }}>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+
+    <title>{{ page_title }}</title>
+</head>
+
+<body>
+    <div class="container is-fluid">
+        <h1 class="title" class="title">This is Bulma</h1>
+        <p>{{ vacancies_count }}</p>
+        <p>{{ languages_stat }}</p>
+
+        <div id="tester" style="width:600px;height:250px;"></div>
+    </div>
+
+    <script>
+        TESTER = document.getElementById('tester');
+        Plotly.plot(TESTER, [{
+            x: [1, 2, 3, 4, 5],
+            y: [1, 2, 4, 8, 16]
+        }], {
+            margin: {
+                t: 0
+            }
+        });
+    </script>
+</body>
+
+</html>
