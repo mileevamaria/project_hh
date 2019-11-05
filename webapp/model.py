@@ -32,10 +32,9 @@ class Vacancy(db.Model):
 
     favourites = db.relationship('Favourite', backref='vacancy_favourite')
 
-
 assoc_skill_user = db.Table("assoc_skill_user",
-                       db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
-                       db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")))
+                        db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
+                        db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")))
 
 
 class User(db.Model, UserMixin):

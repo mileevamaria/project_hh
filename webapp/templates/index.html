@@ -1,41 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-8">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                <div class="alert alert-warning" role="alert">
-                    {% for message in messages %}
-                        {{ message }}<br>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            {% endwith %}
-            <h3>Вакансии для разработчиков</h3>
-                {% for vacancy in vacancies.items %}
-                <a href="{{ vacancy.vacancy_url }}"><h4>{{ vacancy.vacancy_name }}</h4></a>
-                    <p>{{ vacancy.requirements_text }}</p>
-                    {% if vacancy.id in favourite %}
-                    <button type="button" class="btn btn-sm btn-dark" disabled>В избранном</button>
-                    {% else %}
-                    <a href="{{ url_for('process_favourite', id=vacancy.id) }}" class="btn btn-outline-dark btn-sm" role="button">
-                      Добавить в избранное
-                    </a>
-                    {% endif %}
-                <hr />
-            {% endfor %}
-            {% for page_num in vacancies.iter_pages() %}
-            {% if page_num %}
-                {% if vacancies.page == page_num %}
-                <a class="btn btn-dark mb-4" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
-                {% else %}
-                <a class="btn btn-outline-dark mb-4" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
-                {% endif %}
-            {% else %}
-            ...
-            {% endif %}
+<div class="row">
+    <div class="col-8">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+            {% for message in messages %}
+            {{ message }}<br>
             {% endfor %}
         </div>
+        {% endif %}
+        {% endwith %}
+        <h3>Вакансии для разработчиков</h3>
+        {% for vacancy in vacancies.items %}
+        <a href="{{ vacancy.vacancy_url }}">
+            <h4>{{ vacancy.vacancy_name }}</h4>
+        </a>
+        <p>{{ vacancy.vacancy_text_clean | truncate(500) }}</p>
+        {% if vacancy.id in favourite %}
+        <button type="button" class="btn btn-sm btn-dark" disabled>В избранном</button>
+        {% else %}
+        <a href="{{ url_for('process_favourite', id=vacancy.id) }}" class="btn btn-outline-dark btn-sm" role="button">
+            Добавить в избранное
+        </a>
+        {% endif %}
+        <hr />
+        {% endfor %}
+        {% for page_num in vacancies.iter_pages() %}
+        {% if page_num %}
+        {% if vacancies.page == page_num %}
+        <a class="btn btn-dark mb-4" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+        <a class="btn btn-outline-dark mb-4" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+        {% else %}
+        ...
+        {% endif %}
+        {% endfor %}
     </div>
+</div>
 {% endblock content %}
