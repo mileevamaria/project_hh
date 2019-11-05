@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href={{ url_for('static', filename='css/style.css') }}>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <title>{{ page_title }}</title>
+</head>
+
+<body>
+    <div class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-6">
+                        <div id="langLabels"></div>
+                    </div>
+                    <div class="column is-6">
+                        <h1 class="title" class="title">This is Bulma</h1>
+                        <p>{{ vacancies_count }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Section</h1>
+            <h2 class="subtitle">
+                A simple container to divide your page into <strong>sections</strong>, like the one you're currently
+                reading
+            </h2>
+        </div>
+    </section>
+
+
+    <div id="tester" style="width:600px;height:250px;"></div>
+    {% block javascript %}
+        <script>
+            lang_labels = JSON.parse({{ lang_labels | tojson }})
+            lang_stat = JSON.parse({{ lang_stat | tojson }})
+            var lang_options = {
+                chart: {
+                    height: 350,
+                    type: 'radialBar',
+                },
+                plotOptions: {
+                    radialBar: {
+                        offsetY: -10,
+                        startAngle: 0,
+                        endAngle: 270,
+                        hollow: {
+                            margin: 5,
+                            size: '40%',
+                            background: 'transparent',
+                            image: undefined,
+                        },
+                        dataLabels: {
+                            name: {
+                                show: false,
+                            },
+                            value: {
+                                show: false,
+                            }
+                        }
+                    }
+                },
+                colors: ['#1ab7ea', '#0084ff', '#39539E'],
+                series: lang_stat,
+                labels: lang_labels,
+                legend: {
+                    show: true,
+                    floating: true,
+                    fontSize: '16px',
+                    position: 'left',
+                    offsetX: 160,
+                    offsetY: 10,
+                    labels: {
+                        useSeriesColors: true,
+                    },
+                    markers: {
+                        size: 0
+                    },
+                    formatter: function (seriesName, opts) {
+                        return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
+                    },
+                    itemMargin: {
+                        horizontal: 1,
+                    }
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        legend: {
+                            show: false
+                        }
+                    }
+                }],
+                title: {
+                    text: 'Языки вакансий',
+                    align: 'center'
+                },
+            }
+
+            var chart = new ApexCharts(
+                document.querySelector("#langLabels"),
+                lang_options
+            );
+            chart.render();
+        </script>
+    {% endblock %}
+</body>
+
+</html>

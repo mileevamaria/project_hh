@@ -90,3 +90,11 @@ class Skill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     category = db.relationship('Category', secondary=assoc_skill_category, backref=db.backref('catskills', lazy='dynamic'))
+
+class Statistic(db.Model):
+    __tablename__ = "statistic"
+
+    id = db.Column(db.Integer, primary_key=True)
+    vacancy_count = db.Column(db.Integer, nullable=True)
+    languages = db.Column(db.TEXT, nullable=True)
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)

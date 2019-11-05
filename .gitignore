@@ -8,3 +8,6 @@ hh_log.txt
 .scrapy/
 .idea/
 /vacancies.sql
+node_modules
+
+/node_modules
