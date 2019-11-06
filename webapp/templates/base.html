@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>{{ page_title }}</title>
+    <style>
+   li {
+    list-style-type: none; /* Убираем маркеры */
+   }
+   ul {
+    margin-left: 5; /* Отступ слева в браузере IE и Opera */
+    padding-left: 5; /* Отступ слева в браузере Firefox, Safari, Chrome */
+   }
+   </style>
   </head>
   <body>
   {% include "menu.html" %}

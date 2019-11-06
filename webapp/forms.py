@@ -57,10 +57,3 @@ class ProfileForm(FlaskForm):
     relevant = SubmitField('Посмотреть подходящие вакансии', render_kw={"class": "btn btn-link btn-lg"})
     change_password = SubmitField('Изменить пароль', render_kw={"class": "btn btn-link btn-lg"})
     save_changes = SubmitField('Сохранить изменения', render_kw={"class": "btn btn-primary"})
-    skills_nosql = MultiCheckboxField('Базы NoSQL', query_factory=lambda:
-                                    (Category.query.filter(Category.id == 1).first()).catskills, get_label="name")
-
-
-
-
-
