@@ -6,25 +6,54 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href={{ url_for('static', filename='css/style.css') }}>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap&subset=cyrillic" rel="stylesheet">
+    <!--
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <title>{{ page_title }}</title>
 </head>
 
 <body>
+<section class="section">
+    <div class="container">
+      <h1 class="title has-text-centered has-text-weight-light is-family-sans-serif	is-size-3">
+        <span class="text-tag hh-green has-text-weight-normal">СТАТИСТИКА</span> ВАКАНСИЙ <span class="text-tag hh-salmon has-text-weight-normal">СЕГОДНЯ</span>
+      </h1>
+    </div>
+  </section>
     <div class="hero">
         <div class="hero-body">
             <div class="container">
                 <div class="columns">
                     <div class="column is-6">
-                        <div id="langLabels"></div>
+                        <div class="card">
+                            <header class="card-header">
+                                <p class="card-header-title">Языки</p>
+                            </header>
+                            <div class="card-content">
+                               <div id="langChart"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="column is-6">
-                        <h1 class="title" class="title">This is Bulma</h1>
+                        <div class="card">
+                            <header class="card-header">
+                                <p class="card-header-title">Направления</p>
+                            </header>
+                            <div class="card-content">
+                               <div id="gradeChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--
+                    <div class="column is-6">
+                        <h1 class="title">This is Bulma</h1>
                         <p>{{ vacancies_count }}</p>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
@@ -36,11 +65,10 @@
                 A simple container to divide your page into <strong>sections</strong>, like the one you're currently
                 reading
             </h2>
+            <div></div>
         </div>
     </section>
 
-
-    <div id="tester" style="width:600px;height:250px;"></div>
     {% block javascript %}
         <script>
             lang_labels = JSON.parse({{ lang_labels | tojson }})
@@ -71,7 +99,7 @@
                         }
                     }
                 },
-                colors: ['#1ab7ea', '#0084ff', '#39539E'],
+                colors: ['#FEB019', '#FF4560', '#775DD0'],
                 series: lang_stat,
                 labels: lang_labels,
                 legend: {
@@ -79,8 +107,8 @@
                     floating: true,
                     fontSize: '16px',
                     position: 'left',
-                    offsetX: 160,
-                    offsetY: 10,
+                    offsetX: 70,
+                    offsetY: 30,
                     labels: {
                         useSeriesColors: true,
                     },
@@ -91,7 +119,7 @@
                         return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
                     },
                     itemMargin: {
-                        horizontal: 1,
+                        horizontal: 2,
                     }
                 },
                 responsive: [{
@@ -101,20 +129,83 @@
                             show: false
                         }
                     }
-                }],
-                title: {
-                    text: 'Языки вакансий',
-                    align: 'center'
-                },
+                }]
             }
-
             var chart = new ApexCharts(
-                document.querySelector("#langLabels"),
+                document.querySelector("#langChart"),
                 lang_options
             );
             chart.render();
         </script>
+        <script>
+            grade_labels = JSON.parse({{ grade_labels | tojson }})
+            grade_stat = JSON.parse({{ grade_stat | tojson }})
+            var colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8'];
+            var lang_options = {
+                chart: {
+                    height: 350,
+                    type: 'radialBar',
+                },
+                plotOptions: {
+                    radialBar: {
+                        offsetY: -10,
+                        startAngle: 0,
+                        endAngle: 200,
+                        hollow: {
+                            margin: 5,
+                            size: '30%',
+                            background: 'transparent',
+                            image: undefined,
+                        },
+                        dataLabels: {
+                            name: {
+                                show: false,
+                            },
+                            value: {
+                                show: false,
+                            }
+                        }
+                    }
+                },
+                colors: colors,
+                series: grade_stat,
+                labels: grade_labels,
+                legend: {
+                    show: true,
+                    floating: true,
+                    fontSize: '16px',
+                    position: 'left',
+                    offsetX: 70,
+                    offsetY: 30,
+                    labels: {
+                        useSeriesColors: true,
+                    },
+                    markers: {
+                        size: 0
+                    },
+                    formatter: function (seriesName, opts) {
+                        return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
+                    },
+                    itemMargin: {
+                        horizontal: 2,
+                    }
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        legend: {
+                            show: false
+                        }
+                    }
+                }]
+            }
+            var chart = new ApexCharts(
+                document.querySelector("#gradeChart"),
+                lang_options
+            );
+            chart.render();
+        </script>
+
     {% endblock %}
 </body>
-
 </html>
