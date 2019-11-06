@@ -1,22 +1,18 @@
 from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from flask_migrate import Migrate
-from webapp.model import db, Vacancy, User, Favourite, Category, Skill
+from webapp.model import db, Vacancy, User, Favourite, Category, Skill, ProfessionalArea, VacancyGrade
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 import os
-from webapp.statistic import set_statistic, get_languages, get_vacancies_count
+from webapp.statistic import set_statistic, get_languages, get_vacancies_count, get_grades
 import json
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """
 
 
 def create_app():
-    app = Flask(__name__)
-    # app.config.from_pyfile('config.py')
-    SECRET_KEY = os.urandom(32)
-    app.config['SECRET_KEY'] = SECRET_KEY
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/lpproject'
+    app = Flask(__name__, )
+    app.config.from_pyfile('config.py')
     db.init_app(app)
 
     login_manager = LoginManager()
@@ -221,6 +217,9 @@ def create_app():
     @app.route('/statistic', methods=['GET'])
     def statistic():
         title = 'Статистика вакансий'
+
+        # statistic = set_statistic()
+
         vacancies_count = get_vacancies_count()
         vacancies_count = json.dumps(vacancies_count)
 
@@ -228,6 +227,12 @@ def create_app():
         lang_labels = json.dumps(languages_stat[0])
         lang_stat = json.dumps(languages_stat[1])
 
-        return render_template('statistic.html', page_title=title, lang_labels=lang_labels, lang_stat=lang_stat, vacancies_count=vacancies_count)
+        grades_stat = get_grades()
+        grade_labels = json.dumps(grades_stat[0])
+        grade_stat = json.dumps(grades_stat[1])
+
+        return render_template('statistic.html', page_title=title, vacancies_count=vacancies_count,
+                               lang_labels=lang_labels, lang_stat=lang_stat,
+                               grade_labels=grade_labels, grade_stat=grade_stat)
 
     return app

@@ -93,3 +93,29 @@ def get_languages():
                 lang_values.append(int(x))
 
     return lang_labels, lang_values
+
+
+def get_grades():
+    grades_stat = Statistic.query.with_entities(
+        Statistic.grades).filter(Statistic.created_at >= todays_datetime).first()
+
+    grade_string = ''
+    for grade in grades_stat:
+        grade_string = grade
+
+    grade_string = grade_string.replace("'", "\"")
+    grade_stat = json.loads(grade_string)
+
+    df_grades = pd.DataFrame.from_dict(grade_stat)
+
+    grade_labels = list(df_grades.columns)
+    x_data = df_grades.to_numpy()
+
+    grade_values = []
+    for data in x_data:
+        data = str(data).strip('[]').split(' ')
+        for x in data:
+            if x != '':
+                grade_values.append(int(x))
+
+    return grade_labels, grade_values
