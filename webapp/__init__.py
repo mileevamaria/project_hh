@@ -5,13 +5,14 @@ from webapp.model import db, Vacancy, User, Favourite, Category, Skill, Professi
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 import os
 from webapp.statistic import set_statistic, get_languages, get_vacancies_count, get_grades
+from webapp.profile_skills import *
 import json
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """
 
 
 def create_app():
-    app = Flask(__name__, )
+    app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
 
@@ -51,7 +52,7 @@ def create_app():
             flash('Вы уже добавляли эту вакансию в избранное')
         else:
             vacancy_add = Favourite(
-                vacancy_favourite=vacancy, user_favourite=current_user)
+                vacancy_favourite=vacancy, user_favourite=currentq_user)
             db.session.add(vacancy_add)
             db.session.commit()
             flash('Вакансия добавлена в избранное')
@@ -135,9 +136,15 @@ def create_app():
         title = "Профиль пользователя"
         form = ProfileForm()
         user = User.query.filter(
-            User.username == current_user.username).first()
+            User.id == current_user.id).first()
 
-        return render_template('profile.html', page_title=title, form=form, user=user)
+        skills_nosql_base = []
+        for item in user.user_skill:
+            skills_nosql_base.append(item.id)
+
+        skills_nosql_page = Category.query.filter(Category.id == 1).first().catskill
+        return render_template('profile.html', page_title=title, form=form, user=user, skills_nosql_base=skills_nosql_base,
+                               skills_nosql_page=skills_nosql_page)
 
     @app.route('/process-save-changes-person', methods=['POST'])
     def process_save_changes_person():
@@ -203,13 +210,13 @@ def create_app():
 
     @app.route('/process-save-change-skills', methods=['POST'])
     def process_save_change_skills():
-        form = ProfileForm()
-        if form.validate_on_submit():
-            user = User.query.filter(
-                User.username == current_user.username).first()
-            for skill in form.skills_nosql.data:
-                skill.user.append(user)
-                db.session.commit()
+        user = User.query.filter(User.id == current_user.id).first()
+        skills_user = get_user_skills_from_database(user)
+        skills_nosql = get_skills_nosql()
+
+        if request.form:
+            skills_page = request.form.getlist("skills_nosql")
+            update_user_skills(skills_user, skills_nosql, skills_page, user)
 
         flash('Изменения сохранены')
         return redirect(url_for('profile'))

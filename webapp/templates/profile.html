@@ -46,6 +46,7 @@
                     {{ form.city(placeholder=user.city) }}
                    </div>
                 </div>
+                </br>
                 <p>{{ form.save_changes() }}</p>
              </form>
                 </br>
@@ -67,13 +68,21 @@
              <h3>Выбрать навыки</h3>
              </br>
              <form action="{{ url_for('process_save_change_skills') }}" method="POST">
-                {{ form.hidden_tag() }}
-                 <h5>{{ form.skills_nosql.label() }}</h5>
-                 {{ form.skills_nosql() }}
-                 <p>{{ form.save_changes() }}</p>
+                 <h5>Базы данных NoSQL</h5>
+                 {% for item_page in skills_nosql_page %}
+                 <li>
+                     {% if item_page.id in skills_nosql_base %}
+                        <input id="skills_nosql_0" name="skills_nosql" type="checkbox" value="{{ item_page.id }}" checked>
+                     {% else %}
+                        <input id="skills_nosql_1" name="skills_nosql" type="checkbox" value="{{ item_page.id }}">
+                     {% endif %}
+                        <label>{{ item_page.name }}</label>
+                 </li>
+                 {% endfor %}
+                 </br>
+                 <input class="btn btn-primary" type="submit" value="Сохранить изменения">
              </form>
-         </div>
-              </div>
+             </br>
          </div>
     </div>
 {% endblock content  %}

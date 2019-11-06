@@ -1,6 +1,6 @@
 import json
 from webapp import create_app
-from webapp.model import Skill, Category, db
+from webapp.model import Skill, Category, db, User
 
 app = create_app()
 
@@ -34,5 +34,13 @@ def get_category_skill():
                     save_skill(skill_)
 
 with app.app_context():
+    user = User.query.filter(User.id == 1).first()
+    user_skills = user.user_skill
+    skills = Category.query.filter(Category.id == 1).first().catskills
+    for skill in skills:
+        print(skill.name)
+    print('_____________')
+    for skill in user_skills:
+        print(skill.name)
 
 
