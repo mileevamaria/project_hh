@@ -31,10 +31,14 @@ class Vacancy(db.Model):
     vacancy_graded = db.Column(db.Boolean, default=0, nullable=False)
 
     favourites = db.relationship('Favourite', backref='vacancy_favourite')
+    vacancy_grades = db.relationship(
+        'VacancyGrade', backref='vacancy_grades', lazy=True)
+
 
 assoc_skill_user = db.Table("assoc_skill_user",
-                        db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
-                        db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")))
+                            db.Column("user_id", db.Integer,
+                                      db.ForeignKey("users.id")),
+                            db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")))
 
 
 class User(db.Model, UserMixin):
@@ -46,9 +50,11 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128))
     role = db.Column(db.String(10), index=True)
     first_name = db.Column(db.String(80), nullable=True, server_default='Имя')
-    last_name = db.Column(db.String(80), nullable=True, server_default='Фамилия')
+    last_name = db.Column(db.String(80), nullable=True,
+                          server_default='Фамилия')
     city = db.Column(db.String(80), nullable=True, server_default='Город')
-    user = db.relationship('Skill', secondary=assoc_skill_user, backref=db.backref('user', lazy='dynamic'))
+    user = db.relationship('Skill', secondary=assoc_skill_user,
+                           backref=db.backref('user', lazy='dynamic'))
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -69,12 +75,14 @@ class Favourite(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    vacancy_id = db.Column(db.Integer, db.ForeignKey('vacancies.id'), nullable=False)
+    vacancy_id = db.Column(db.Integer, db.ForeignKey(
+        'vacancies.id'), nullable=False)
 
 
 assoc_skill_category = db.Table("assoc_skill_category",
-                       db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")),
-                       db.Column("category_id", db.Integer, db.ForeignKey("categories.id")))
+                                db.Column("skill_id", db.Integer,
+                                          db.ForeignKey("skills.id")),
+                                db.Column("category_id", db.Integer, db.ForeignKey("categories.id")))
 
 
 class Category(db.Model):
@@ -98,4 +106,31 @@ class Statistic(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     vacancy_count = db.Column(db.Integer, nullable=True)
     languages = db.Column(db.TEXT, nullable=True)
-    created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+    grades = db.Column(db.TEXT, nullable=True)
+    ungraded_vacancies = db.Column(db.TEXT, nullable=True)
+    words = db.Column(db.TEXT, nullable=True)
+    created_at = db.Column(
+        db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+
+
+class ProfessionalArea(db.Model):
+    __tablename__ = "prof_areas"
+
+    id = db.Column(db.Integer, primary_key=True)
+    area_name = db.Column(db.String(100), nullable=True)
+    created_at = db.Column(
+        db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+
+    prof_grades = db.relationship(
+        'VacancyGrade', backref='prof_grades', lazy=True)
+
+
+class VacancyGrade(db.Model):
+    __tablename__ = "vacancy_grades"
+
+    id = db.Column(db.Integer, primary_key=True)
+    vacancy_id = db.Column(db.Integer, db.ForeignKey(
+        'vacancies.id'), nullable=False)
+    prof_area_id = db.Column(db.Integer, db.ForeignKey(
+        'prof_areas.id'), nullable=False)
+    grade = db.Column(db.DECIMAL(18, 17), nullable=True)

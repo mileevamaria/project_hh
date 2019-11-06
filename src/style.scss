@@ -1,0 +1,18 @@
+@charset "utf-8";
+@import "~bulma/bulma";
+
+$family-sans-serif: "Open Sans", sans-serif;
+
+.text-tag {
+  padding: 2px 10px;
+  color: white;
+  border-radius: 10px;
+
+  &.hh-green {
+    background-color: #70c1a5;
+  }
+
+  &.hh-salmon {
+    background-color: #f58376;
+  }
+}
