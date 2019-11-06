@@ -55,6 +55,7 @@ class User(db.Model, UserMixin):
     city = db.Column(db.String(80), nullable=True, server_default='Город')
     user = db.relationship('Skill', secondary=assoc_skill_user,
                            backref=db.backref('user', lazy='dynamic'))
+    favourites = db.relationship('Favourite', backref='user_favourite')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

@@ -31,3 +31,11 @@ def get_skills_nosql():
         skills_nosql.append(skill.id)
 
     return skills_nosql
+
+def get_skills_sql():
+    skills = Category.query.filter(Category.id == 2).first().catskill
+    skills_sql = []
+    for skill in skills:
+        skills_sql.append(skill.id)
+
+    return skills_sql

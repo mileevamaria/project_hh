@@ -66,23 +66,46 @@
     <div class="row">
          <div class="col-12">
              <h3>Выбрать навыки</h3>
-             </br>
-             <form action="{{ url_for('process_save_change_skills') }}" method="POST">
-                 <h5>Базы данных NoSQL</h5>
-                 {% for item_page in skills_nosql_page %}
-                 <li>
-                     {% if item_page.id in skills_nosql_base %}
-                        <input id="skills_nosql_0" name="skills_nosql" type="checkbox" value="{{ item_page.id }}" checked>
-                     {% else %}
-                        <input id="skills_nosql_1" name="skills_nosql" type="checkbox" value="{{ item_page.id }}">
-                     {% endif %}
-                        <label>{{ item_page.name }}</label>
-                 </li>
-                 {% endfor %}
-                 </br>
-                 <input class="btn btn-primary" type="submit" value="Сохранить изменения">
-             </form>
-             </br>
          </div>
     </div>
+    <form action="{{ url_for('process_save_change_skills') }}" method="POST">
+        <div class="row">
+            <div class="col-3">
+             </br>
+             <h5>Базы данных NoSQL</h5>
+             {% for item_page in skills_nosql_page %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_nosql_0" name="skills_nosql" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_nosql_1" name="skills_nosql" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+         <div class="col-3">
+             </br>
+             <h5>Базы данных SQL</h5>
+             {% for item_page in skills_sql_page %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_sql_0" name="skills_sql" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_sql_1" name="skills_sql" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+             </br>
+         </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                 <input class="btn btn-primary" type="submit" value="Сохранить изменения">
+            </div>
+        </div>
+    </form>
+    </br>
 {% endblock content  %}

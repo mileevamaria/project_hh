@@ -52,7 +52,7 @@ def create_app():
             flash('Вы уже добавляли эту вакансию в избранное')
         else:
             vacancy_add = Favourite(
-                vacancy_favourite=vacancy, user_favourite=currentq_user)
+                vacancy_favourite=vacancy, user_favourite=current_user)
             db.session.add(vacancy_add)
             db.session.commit()
             flash('Вакансия добавлена в избранное')
@@ -138,13 +138,15 @@ def create_app():
         user = User.query.filter(
             User.id == current_user.id).first()
 
-        skills_nosql_base = []
+        skills_base = []
         for item in user.user_skill:
-            skills_nosql_base.append(item.id)
+            skills_base.append(item.id)
 
         skills_nosql_page = Category.query.filter(Category.id == 1).first().catskill
-        return render_template('profile.html', page_title=title, form=form, user=user, skills_nosql_base=skills_nosql_base,
-                               skills_nosql_page=skills_nosql_page)
+        skills_sql_page = Category.query.filter(Category.id == 2).first().catskill
+
+        return render_template('profile.html', page_title=title, form=form, user=user, skills_base=skills_base,
+                               skills_nosql_page=skills_nosql_page, skills_sql_page=skills_sql_page)
 
     @app.route('/process-save-changes-person', methods=['POST'])
     def process_save_changes_person():
@@ -212,11 +214,15 @@ def create_app():
     def process_save_change_skills():
         user = User.query.filter(User.id == current_user.id).first()
         skills_user = get_user_skills_from_database(user)
+
         skills_nosql = get_skills_nosql()
+        skills_sql = get_skills_sql()
 
         if request.form:
-            skills_page = request.form.getlist("skills_nosql")
-            update_user_skills(skills_user, skills_nosql, skills_page, user)
+            skills_page_nosql = request.form.getlist("skills_nosql")
+            skills_page_sql = request.form.getlist("skills_sql")
+            update_user_skills(skills_user, skills_nosql, skills_page_nosql, user)
+            update_user_skills(skills_user, skills_sql, skills_page_sql, user)
 
         flash('Изменения сохранены')
         return redirect(url_for('profile'))
