@@ -7,3 +7,4 @@ hh_log.txt
 .scrapy/
 .idea/
 node_modules
+/webapp/config.py
