@@ -144,9 +144,20 @@ def create_app():
 
         skills_nosql_page = Category.query.filter(Category.id == 1).first().catskill
         skills_sql_page = Category.query.filter(Category.id == 2).first().catskill
+        skills_lang_page = Category.query.filter(Category.id == 3).first().catskill
+        skills_vsc_page = Category.query.filter(Category.id == 4).first().catskill
+        skills_api_page = Category.query.filter(Category.id == 5).first().catskill
+        skills_frame_page = Category.query.filter(Category.id == 6).first().catskill
+        skills_tools_page = Category.query.filter(Category.id == 7).first().catskill
+        skills_auto_page = Category.query.filter(Category.id == 8).first().catskill
+        skills_orm_page = Category.query.filter(Category.id == 9).first().catskill
 
         return render_template('profile.html', page_title=title, form=form, user=user, skills_base=skills_base,
-                               skills_nosql_page=skills_nosql_page, skills_sql_page=skills_sql_page)
+                               skills_nosql_page=skills_nosql_page, skills_sql_page=skills_sql_page,
+                               skills_lang_page=skills_lang_page, skills_vsc_page=skills_vsc_page,
+                               skills_api_page=skills_api_page, skills_frame_page=skills_frame_page,
+                               skills_tools_page=skills_tools_page, skills_auto_page=skills_auto_page,
+                               skills_orm_page=skills_orm_page)
 
     @app.route('/process-save-changes-person', methods=['POST'])
     def process_save_changes_person():
@@ -217,12 +228,34 @@ def create_app():
 
         skills_nosql = get_skills_nosql()
         skills_sql = get_skills_sql()
+        skills_lang = get_skills_lang()
+        skills_vsc = get_skills_vsc()
+        skills_api = get_skills_api()
+        skills_frame = get_skills_frame()
+        skills_tools = get_skills_tools()
+        skills_auto = get_skills_auto()
+        skills_orm = get_skills_orm()
 
         if request.form:
             skills_page_nosql = request.form.getlist("skills_nosql")
             skills_page_sql = request.form.getlist("skills_sql")
+            skills_page_lang = request.form.getlist("skills_lang")
+            skills_page_vsc = request.form.getlist("skills_vsc")
+            skills_page_api = request.form.getlist("skills_api")
+            skills_page_frame = request.form.getlist("skills_frame")
+            skills_page_tools = request.form.getlist("skills_tools")
+            skills_page_auto = request.form.getlist("skills_auto")
+            skills_page_orm = request.form.getlist("skills_orm")
+
             update_user_skills(skills_user, skills_nosql, skills_page_nosql, user)
             update_user_skills(skills_user, skills_sql, skills_page_sql, user)
+            update_user_skills(skills_user, skills_lang, skills_page_lang, user)
+            update_user_skills(skills_user, skills_vsc, skills_page_vsc, user)
+            update_user_skills(skills_user, skills_api, skills_page_api, user)
+            update_user_skills(skills_user, skills_frame, skills_page_frame, user)
+            update_user_skills(skills_user, skills_tools, skills_page_tools, user)
+            update_user_skills(skills_user, skills_auto, skills_page_auto, user)
+            update_user_skills(skills_user, skills_orm, skills_page_orm, user)
 
         flash('Изменения сохранены')
         return redirect(url_for('profile'))
