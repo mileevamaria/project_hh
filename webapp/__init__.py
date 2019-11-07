@@ -142,22 +142,31 @@ def create_app():
         for item in user.user_skill:
             skills_base.append(item.id)
 
-        skills_nosql_page = Category.query.filter(Category.id == 1).first().catskill
-        skills_sql_page = Category.query.filter(Category.id == 2).first().catskill
-        skills_lang_page = Category.query.filter(Category.id == 3).first().catskill
-        skills_vsc_page = Category.query.filter(Category.id == 4).first().catskill
-        skills_api_page = Category.query.filter(Category.id == 5).first().catskill
-        skills_frame_page = Category.query.filter(Category.id == 6).first().catskill
-        skills_tools_page = Category.query.filter(Category.id == 7).first().catskill
-        skills_auto_page = Category.query.filter(Category.id == 8).first().catskill
-        skills_orm_page = Category.query.filter(Category.id == 9).first().catskill
+        skills_page_lang = Category.query.filter(Category.id == 1).first().catskill
+        skills_page_db = Category.query.filter(Category.id == 2).first().catskill
+        skills_page_frame = Category.query.filter(Category.id == 3).first().catskill
+        skills_page_webprot = Category.query.filter(Category.id == 4).first().catskill
+        skills_page_search = Category.query.filter(Category.id == 5).first().catskill
+        skills_page_webser = Category.query.filter(Category.id == 6).first().catskill
+        skills_page_message = Category.query.filter(Category.id == 7).first().catskill
+        skills_page_os = Category.query.filter(Category.id == 8).first().catskill
+        skills_page_vcs = Category.query.filter(Category.id == 9).first().catskill
+        skills_page_virt = Category.query.filter(Category.id == 10).first().catskill
+        skills_page_auto = Category.query.filter(Category.id == 11).first().catskill
+        skills_page_orm = Category.query.filter(Category.id == 12).first().catskill
+        skills_page_spm = Category.query.filter(Category.id == 13).first().catskill
+        skills_page_mpm = Category.query.filter(Category.id == 14).first().catskill
+        skills_page_monitor = Category.query.filter(Category.id == 15).first().catskill
 
         return render_template('profile.html', page_title=title, form=form, user=user, skills_base=skills_base,
-                               skills_nosql_page=skills_nosql_page, skills_sql_page=skills_sql_page,
-                               skills_lang_page=skills_lang_page, skills_vsc_page=skills_vsc_page,
-                               skills_api_page=skills_api_page, skills_frame_page=skills_frame_page,
-                               skills_tools_page=skills_tools_page, skills_auto_page=skills_auto_page,
-                               skills_orm_page=skills_orm_page)
+                               skills_page_lang=skills_page_lang,skills_page_db=skills_page_db,
+                               skills_page_frame=skills_page_frame, skills_page_webprot=skills_page_webprot,
+                               skills_page_search=skills_page_search, skills_page_webser=skills_page_webser,
+                               skills_page_message=skills_page_message, skills_page_os=skills_page_os,
+                               skills_page_vcs=skills_page_vcs, skills_page_virt=skills_page_virt,
+                               skills_page_auto=skills_page_auto, skills_page_orm=skills_page_orm,
+                               skills_page_spm=skills_page_spm, skills_page_mpm=skills_page_mpm,
+                               skills_page_monitor=skills_page_monitor)
 
     @app.route('/process-save-changes-person', methods=['POST'])
     def process_save_changes_person():
@@ -226,36 +235,54 @@ def create_app():
         user = User.query.filter(User.id == current_user.id).first()
         skills_user = get_user_skills_from_database(user)
 
-        skills_nosql = get_skills_nosql()
-        skills_sql = get_skills_sql()
         skills_lang = get_skills_lang()
-        skills_vsc = get_skills_vsc()
-        skills_api = get_skills_api()
+        skills_db = get_skills_db()
         skills_frame = get_skills_frame()
-        skills_tools = get_skills_tools()
+        skills_webprot = get_skills_webprot()
+        skills_search = get_skills_search()
+        skills_webser = get_skills_webser()
+        skills_message = get_skills_message()
+        skills_os = get_skills_os()
+        skills_vcs = get_skills_vcs()
+        skills_virt = get_skills_virt()
         skills_auto = get_skills_auto()
         skills_orm = get_skills_orm()
+        skills_spm = get_skills_spm()
+        skills_mpm = get_skills_mpm()
+        skills_monitor = get_skills_monitor()
 
         if request.form:
-            skills_page_nosql = request.form.getlist("skills_nosql")
-            skills_page_sql = request.form.getlist("skills_sql")
             skills_page_lang = request.form.getlist("skills_lang")
-            skills_page_vsc = request.form.getlist("skills_vsc")
-            skills_page_api = request.form.getlist("skills_api")
+            skills_page_db = request.form.getlist("skills_db")
             skills_page_frame = request.form.getlist("skills_frame")
-            skills_page_tools = request.form.getlist("skills_tools")
+            skills_page_webprot = request.form.getlist("skills_webprot")
+            skills_page_search = request.form.getlist("skills_search")
+            skills_page_webser = request.form.getlist("skills_webser")
+            skills_page_message = request.form.getlist("skills_message")
+            skills_page_os = request.form.getlist("skills_os")
+            skills_page_vcs = request.form.getlist("skills_vcs")
+            skills_page_virt = request.form.getlist("skills_virt")
             skills_page_auto = request.form.getlist("skills_auto")
             skills_page_orm = request.form.getlist("skills_orm")
+            skills_page_spm = request.form.getlist("skills_spm")
+            skills_page_mpm = request.form.getlist("skills_mpm")
+            skills_page_monitor = request.form.getlist("skills_monitor")
 
-            update_user_skills(skills_user, skills_nosql, skills_page_nosql, user)
-            update_user_skills(skills_user, skills_sql, skills_page_sql, user)
             update_user_skills(skills_user, skills_lang, skills_page_lang, user)
-            update_user_skills(skills_user, skills_vsc, skills_page_vsc, user)
-            update_user_skills(skills_user, skills_api, skills_page_api, user)
+            update_user_skills(skills_user, skills_db, skills_page_db, user)
             update_user_skills(skills_user, skills_frame, skills_page_frame, user)
-            update_user_skills(skills_user, skills_tools, skills_page_tools, user)
+            update_user_skills(skills_user, skills_webprot, skills_page_webprot, user)
+            update_user_skills(skills_user, skills_search, skills_page_search, user)
+            update_user_skills(skills_user, skills_webser, skills_page_webser, user)
+            update_user_skills(skills_user, skills_message, skills_page_message, user)
+            update_user_skills(skills_user, skills_os, skills_page_os, user)
+            update_user_skills(skills_user, skills_vcs, skills_page_vcs, user)
+            update_user_skills(skills_user, skills_virt, skills_page_virt, user)
             update_user_skills(skills_user, skills_auto, skills_page_auto, user)
             update_user_skills(skills_user, skills_orm, skills_page_orm, user)
+            update_user_skills(skills_user, skills_spm, skills_page_spm, user)
+            update_user_skills(skills_user, skills_mpm, skills_page_mpm, user)
+            update_user_skills(skills_user, skills_monitor, skills_page_monitor, user)
 
         flash('Изменения сохранены')
         return redirect(url_for('profile'))
