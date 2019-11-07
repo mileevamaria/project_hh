@@ -6,6 +6,7 @@ from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswor
 import os
 from webapp.statistic import set_statistic, get_languages, get_vacancies_count, get_grades
 from webapp.profile_skills import *
+from webapp.count_skills import count_skills
 import json
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """

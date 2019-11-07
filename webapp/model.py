@@ -98,6 +98,7 @@ class Skill(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    count = db.Column(db.Integer, nullable=True)
     category = db.relationship('Category', secondary=assoc_skill_category, backref=db.backref('catskill', lazy='dynamic'))
     skill = db.relationship('User', secondary=assoc_skill_user, backref=db.backref('user_skill', lazy='dynamic'))
 
