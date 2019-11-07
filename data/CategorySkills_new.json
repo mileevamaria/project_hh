@@ -1,0 +1,34 @@
+[
+  {"Языки программирования": ["Python", "Java", "PHP", "Pascal", "Ruby", "ABAP", "JavaScript", "C++", "SQL", "Delphi",
+    "TypeScript", ".NET", "Kotlin", "Scala"]},
+
+  {"Базы данных": ["MySQL", "PostgreSQL", "Redis", "Cassandra", "Prometheus", "InfluxDB", "MongoDB", "MariaDB",
+    "CouchDB", "ClickHouse"]},
+
+  {"Фреймворки": ["Django", "Flask", "AIOHTTP", "Falcon", "Spark"]},
+
+  {"Веб-протоколы": ["TCP/IP", "TCP", "WebSocket"]},
+
+  {"Поисковые системы": ["Elasticsearch", "Solr", "Sphinx"]},
+
+  {"Веб-серверы": ["Tornado", "Apache", "Nginx"]},
+
+  {"Брокеры сообщений": ["RabbitMQ", "Kafka", "Amazon SQS"]},
+
+  {"Операционные системы": ["Windows", "Linux", "Debian"]},
+
+  {"Контроль версий": ["Git", "Bitbucket", "Github", "Mercurial"]},
+
+  {"Виртуализация": ["Docker", "VMware"]},
+
+  {"Автоматизация": ["PowerShell", "Ansible", "Jenkins", "TeamCity"]},
+
+  {"ORM": ["sqlalchemy", "mongoengine", "hibernate"]},
+
+  {"Системы управление проектами": ["Redmine", "Confluence"]},
+
+  {"Методы управления проектами": ["Scrum", "Kanban", "Agile"]},
+
+  {"Системы мониторинга": ["Zabbix"]}
+
+  ]
