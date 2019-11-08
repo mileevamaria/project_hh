@@ -6,206 +6,327 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href={{ url_for('static', filename='css/style.css') }}>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap&subset=cyrillic" rel="stylesheet">
-    <!--
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-    -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap&subset=cyrillic"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
     <title>{{ page_title }}</title>
 </head>
 
 <body>
-<section class="section">
-    <div class="container">
-      <h1 class="title has-text-centered has-text-weight-light is-family-sans-serif	is-size-3">
-        <span class="text-tag hh-green has-text-weight-normal">СТАТИСТИКА</span> ВАКАНСИЙ <span class="text-tag hh-salmon has-text-weight-normal">СЕГОДНЯ</span>
-      </h1>
-    </div>
-  </section>
     <div class="hero">
         <div class="hero-body">
-            <div class="container">
-                <div class="columns">
-                    <div class="column is-6">
-                        <div class="card">
-                            <header class="card-header">
-                                <p class="card-header-title">Языки</p>
-                            </header>
-                            <div class="card-content">
-                               <div id="langChart"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-6">
-                        <div class="card">
-                            <header class="card-header">
-                                <p class="card-header-title">Направления</p>
-                            </header>
-                            <div class="card-content">
-                               <div id="gradeChart"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--
-                    <div class="column is-6">
-                        <h1 class="title">This is Bulma</h1>
-                        <p>{{ vacancies_count }}</p>
-                    </div>
-                    -->
+            <section class="section">
+                <div class="container">
+                    <h1 class="title has-text-centered has-text-weight-light is-family-sans-serif is-size-3">
+                        <span class="text-tag hh-green has-text-weight-normal">СТАТИСТИКА</span> ВАКАНСИЙ <span
+                            class="text-tag hh-salmon has-text-weight-normal">СЕГОДНЯ</span>
+                    </h1>
                 </div>
-            </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <h1 class="title">Откуда дровишки?</h1>
+                    <h2 class="subtitle">
+                        Долго и упорно (целых 10 минут в сутки) наш паук собирает вакансии по запросу
+                        <strong>python</strong> с сайта **.ru
+                    </h2>
+                </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-12">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">Языки</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="langChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <h1 class="title">Профессиональная область</h1>
+                    <h2 class="subtitle">
+                        Разделение на профессиональные области делает специально обученная модель
+                    </h2>
+                    <p>Мы долго ее учили определять, что же на самом деле HR имели ввиду, когда публиковали свои
+                        вакансии и в какой области они все таки ищут человека. </br>
+                        Где-то она справляется с поставленной задачей практически на 100% верно. А где-то она так и не
+                        научилась понимать потенциальных работодателей. </br>
+                        Но чему она точно научилась, так это вакансию "курьер" (да-да, по запросу python и такие
+                        появляются) безошибочно помечать, как "неведомую фигню". </br>
+                        Возможно, что в такие моменты она даже
+                        приговаривает: "прости им, ибо они не ведают, что творят".
+                    </p>
+                </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-12">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">Профессиональные области</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="chartProfAreas"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-12">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">Примеры фигни</p>
+                                </header>
+                                <div class="card-content">
+                                    <div style="margin-bottom:15px;">
+                                        <p><strong class="has-text-danger is-uppercase">Курьер</strong></header>
+                                        <p>
+                                        Ivideon — это самый популярный в мире облачный сервис видеонаблюдения через Интернет. Мы помогаем анализировать бизнес: понимать как часто возникают очереди, сколько людей заходит в магазин, а сколько проходит мимо, какой средний чек, что люди покупают. Глобально мы идем в сторону middleware платформы, которую легко развернуть и интегрировать в любую систему, которой нужен облачный видеостриминг. У нас собственные подсистемы кодирования видео, распределённое хранилище архива c петабайтами данных, видеоаналитика и ещё десятки микросервисов для разных задач. Всё это работает на стеке <span class="text-tag has-background-danger">Python</span> 3 (Tornado и Asyncio), C++/Asio, MongoDB, Docker, Consul. Мы разрабатываем сервис, но он не работает без камер. Нам нужен человек, который будет доставлять камеры видеонаблюдения нашим дорогим клиентам. Задачи: Доставка оборудования клиентам Консультация клиентов по оборудованию Ведение отчетности по заказам Пожелания к опыту: Опыт работы курьером Здорово, если работали раньше с технологичными продуктами и можете проконсультировать клиента по базовым вопросам С нас: Хороший коллектив; Полностью белая зарплата без задержек с прозрачной системой премирования; ДМС после испытательного срока.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p><strong class="has-text-danger is-uppercase">Административный секретарь офиса</strong></header>
+                                        <p>
+                                        - звонки, гости, снабжение. Это стандартный минимальный набор любого офис-менеджера, заключающийся в заказе канцелярских принадлежностей и всего, что необходимо для небольшого офиса. Никаких холодных звонков у нас нет. Только входящие звонки от потенциальных клиентов, которым нужно объяснить сущность наших услуг. - рассылка и подготовка писем за подписью директоров направлений, - мы работаем с использованием таких общедоступных инструментов как Битрикс. Разобраться в подобных программах для активного пользователя интернета не составит никакого труда. - при наличии уникальных навыков, мы дадим вам возможность увеличить свою зарплату. Требования: - знание ПК на уровне активный пользователь Интернета. От вас никто не будет требовать навыков системного администратора или разработчика на языке <span class="text-tag has-background-danger">Python</span>. Однако, вопросы «как включить Скайп» или «я не знаю как сменить расширение у файла» не принимаются. Инструменты, с которыми мы работаем не являются настолько сложными, чтобы в них не мог разобраться средний пользователь. - основное требование - заниматься рутиной долгое время. Если мы увидим в вас желание и возможность заниматься интересными проектами, то пересмотрим вашу зарплату в сторону увеличения, а функционал расширим. Условия: - ЗП на исп.срок от 40 т.р., далее обсуждается с успешным кандидатом, - график работы 8.00-18.00 5/2 (10.00-20.00 5/2). - работа в уютном офисе, кофе и печеньки за счет работодателя. Кто нам НЕ нужен: - люди которые не хотят развиваться и им без разницы куда идти работать; - кто работает от звонка до звонка, а вне рабочего времени его телефон выключен; - кто с компьютером на Вы и для него сложно осваивать новые программы; Добро пожаловать!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-12">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">Требуемый опыт</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="chartProfExp"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">Section</h1>
-            <h2 class="subtitle">
-                A simple container to divide your page into <strong>sections</strong>, like the one you're currently
-                reading
-            </h2>
-            <div></div>
-        </div>
-    </section>
 
     {% block javascript %}
         <script>
-            lang_labels = JSON.parse({{ lang_labels | tojson }})
-            lang_stat = JSON.parse({{ lang_stat | tojson }})
-            var lang_options = {
+            var options = {
                 chart: {
-                    height: 350,
-                    type: 'radialBar',
+                    height: 150,
+                    type: 'bar',
+                    stacked: true,
+                    stackType: '100%',
+                    toolbar: {
+                        show: true
+                    },
+                    zoom: {
+                        enabled: true
+                    }
                 },
                 plotOptions: {
-                    radialBar: {
-                        offsetY: -10,
-                        startAngle: 0,
-                        endAngle: 270,
-                        hollow: {
-                            margin: 5,
-                            size: '40%',
-                            background: 'transparent',
-                            image: undefined,
-                        },
-                        dataLabels: {
-                            name: {
-                                show: false,
-                            },
-                            value: {
-                                show: false,
-                            }
+                    bar: {
+                        horizontal: true,
+                    },
+                },
+                stroke: {
+                    width: 1,
+                    colors: ['#fff']
+                },
+                series: [{
+                    name: 'Русский',
+                    data: {{ languages['ru'] }}
+                }, {
+                    name: 'English',
+                    data: {{ languages['en'] }}
+                }, {
+                    name: 'Український',
+                    data: {{languages['uk']}}
+                }],
+                xaxis: {
+                    categories: ['Языки'],
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val
                         }
                     }
                 },
-                colors: ['#FEB019', '#FF4560', '#775DD0'],
-                series: lang_stat,
-                labels: lang_labels,
+                fill: {
+                    opacity: 1
+                },
                 legend: {
-                    show: true,
-                    floating: true,
-                    fontSize: '16px',
-                    position: 'left',
-                    offsetX: 70,
-                    offsetY: 30,
-                    labels: {
-                        useSeriesColors: true,
-                    },
-                    markers: {
-                        size: 0
-                    },
-                    formatter: function (seriesName, opts) {
-                        return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
-                    },
-                    itemMargin: {
-                        horizontal: 2,
-                    }
-                },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        legend: {
-                            show: false
-                        }
-                    }
-                }]
+                    position: 'top',
+                    horizontalAlign: 'left',
+                    offsetX: 40
+                }
             }
             var chart = new ApexCharts(
                 document.querySelector("#langChart"),
-                lang_options
+                options
             );
             chart.render();
         </script>
         <script>
-            grade_labels = JSON.parse({{ grade_labels | tojson }})
-            grade_stat = JSON.parse({{ grade_stat | tojson }})
-            var colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8'];
-            var lang_options = {
+            var options = {
                 chart: {
-                    height: 350,
-                    type: 'radialBar',
+                    height: 150,
+                    type: 'bar',
+                    stacked: true,
+                    stackType: '100%',
+                    toolbar: {show: true
+                    },
+                    zoom: {
+                        enabled: true
+                    }
                 },
                 plotOptions: {
-                    radialBar: {
-                        offsetY: -10,
-                        startAngle: 0,
-                        endAngle: 200,
-                        hollow: {
-                            margin: 5,
-                            size: '30%',
-                            background: 'transparent',
-                            image: undefined,
-                        },
-                        dataLabels: {
-                            name: {
-                                show: false,
-                            },
-                            value: {
-                                show: false,
-                            }
+                    bar: {
+                        horizontal: true,
+                    },
+                },
+                stroke: {
+                    width: 1,
+                    colors: ['#fff']
+                },
+                series: [{
+                        name: 'BigData',
+                        data: {{ [prof_areas[0].count] }}
+                    }, {
+                        name: 'Development',
+                        data: {{ [prof_areas[1].count] }}
+                    }, {
+                        name: 'DevOps',
+                        data: {{ [prof_areas[2].count] }}
+                    },
+                    {
+                        name: 'QA',
+                        data: {{ [prof_areas[3].count] }}
+                    },
+                    {
+                        name: 'SystemAdministration',
+                        data: {{ [prof_areas[4].count] }}
+                    },
+                    {
+                        name: 'Teaching',
+                        data: {{ [prof_areas[5].count] }}
+                    }, {
+                        name: 'Teamlead',
+                        data: {{ [prof_areas[6].count] }}
+                    }, {
+                        name: 'Неизвестная фигня',
+                        data: {{ [prof_areas[7].count] }}
+                    }
+                ],
+                xaxis: {
+                    categories: ['Проф. области'],
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val
                         }
                     }
                 },
-                colors: colors,
-                series: grade_stat,
-                labels: grade_labels,
+                fill: {
+                    opacity: 1
+
+                },
                 legend: {
-                    show: true,
-                    floating: true,
-                    fontSize: '16px',
-                    position: 'left',
-                    offsetX: 70,
-                    offsetY: 30,
-                    labels: {
-                        useSeriesColors: true,
-                    },
-                    markers: {
-                        size: 0
-                    },
-                    formatter: function (seriesName, opts) {
-                        return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
-                    },
-                    itemMargin: {
-                        horizontal: 2,
-                    }
-                },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        legend: {
-                            show: false
-                        }
-                    }
-                }]
+                    position: 'top',
+                    horizontalAlign: 'left',
+                    offsetX: 40
+                }
             }
             var chart = new ApexCharts(
-                document.querySelector("#gradeChart"),
-                lang_options
+                document.querySelector("#chartProfAreas"),
+                options
             );
             chart.render();
         </script>
+        <script>
+            var options = {
+            chart: {
+                height: 350,
+                type: 'bar',
+                stacked: true,
+                stackType: '100%'
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                },
+
+            },
+            stroke: {
+                width: 1,
+                colors: ['#fff']
+            },
+            series: [{
+                name: 'не требуется',
+                data: {{area_exp[0]['no_exp']}}
+            },{
+                name: '1–3 года',
+                data: {{area_exp[0]['one_three_year']}}
+            },{
+                name: '3–6 лет',
+                data: {{area_exp[0]['three_six_year']}}
+            },{
+                name: 'более 6 лет',
+                data: {{area_exp[0]['more_six_year']}}
+            }],
+            xaxis: {
+                categories: ['BigData', 'Development', 'DevOps', 'QA', 'SystemAdministration', 'Teaching', 'Teamlead'],
+            },
+
+            tooltip: {
+                    y: {
+                        formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+
+            },
+
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left',
+                offsetX: 40
+            }
+        }
+
+       var chart = new ApexCharts(
+            document.querySelector("#chartProfExp"),
+            options
+        );
+
+        chart.render();
+        </script>
+
 
     {% endblock %}
 </body>
+
 </html>

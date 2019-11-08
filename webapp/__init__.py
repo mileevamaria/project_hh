@@ -4,9 +4,11 @@ from flask_migrate import Migrate
 from webapp.model import db, Vacancy, User, Favourite, Category, Skill, ProfessionalArea, VacancyGrade
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 import os
-from webapp.statistic import set_statistic, get_languages, get_vacancies_count, get_grades
+from webapp.statistic import set_statistic, get_languages, get_vacancies_count, get_grades, set_json_statistic
 from webapp.profile_skills import *
 import json
+from ast import literal_eval
+from collections import defaultdict
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """
 
@@ -142,7 +144,8 @@ def create_app():
         for item in user.user_skill:
             skills_nosql_base.append(item.id)
 
-        skills_nosql_page = Category.query.filter(Category.id == 1).first().catskill
+        skills_nosql_page = Category.query.filter(
+            Category.id == 1).first().catskill
         return render_template('profile.html', page_title=title, form=form, user=user, skills_nosql_base=skills_nosql_base,
                                skills_nosql_page=skills_nosql_page)
 
@@ -225,21 +228,14 @@ def create_app():
     def statistic():
         title = 'Статистика вакансий'
 
-        # statistic = set_statistic()
+        #statistic = set_json_statistic()
 
-        vacancies_count = get_vacancies_count()
-        vacancies_count = json.dumps(vacancies_count)
+        with open('vacancies_stat.json.json', mode='r', encoding='utf8') as f:
+            data = json.load(f)
+            languages = data['languages']
+            prof_areas = data['profession_vacancies']
+            area_exp = data['areas_experience']
 
-        languages_stat = get_languages()
-        lang_labels = json.dumps(languages_stat[0])
-        lang_stat = json.dumps(languages_stat[1])
-
-        grades_stat = get_grades()
-        grade_labels = json.dumps(grades_stat[0])
-        grade_stat = json.dumps(grades_stat[1])
-
-        return render_template('statistic.html', page_title=title, vacancies_count=vacancies_count,
-                               lang_labels=lang_labels, lang_stat=lang_stat,
-                               grade_labels=grade_labels, grade_stat=grade_stat)
+        return render_template('statistic.html', page_title=title, prof_areas=prof_areas, area_exp=area_exp, languages=languages)
 
     return app

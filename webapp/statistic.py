@@ -10,6 +10,116 @@ from collections import defaultdict
 """ todays_datetime = datetime(datetime.today().year,
                            datetime.today().month, datetime.today().day) """
 todays_datetime = "2019-11-4"
+cutoff_value = 0.5
+
+
+def set_json_statistic():
+    data = {}
+    # дата
+    data['date'] = todays_datetime
+
+    # количество вакансий
+    data['vacancy_count'] = Vacancy.query.count()
+
+    # языки
+    # языки вакансий
+    languages = db.session.query(Vacancy.language, db.func.count(
+        Vacancy.language)).group_by(Vacancy.language).all()
+
+    lang_stat = defaultdict(list)
+    for k, v in languages:
+        lang_stat[k].append(v)
+    lang_stat = dict(lang_stat)
+
+    data['languages'] = lang_stat
+
+    # профессии
+    professions = ProfessionalArea.query.all()
+    professions_count = ProfessionalArea.query.count()
+
+    profession_vacancy = []
+    expirience_dict = {}
+    no_exp = []
+    one_three_year = []
+    three_six_year = []
+    more_six_year = []
+    for profession in professions:
+        prof_dict = {}
+
+        prof_dict['prof_id'] = profession.id
+        prof_dict['prof_name'] = profession.area_name
+
+        prof_graded_vacancies = VacancyGrade.query.with_entities(VacancyGrade.vacancy_id).filter(
+            VacancyGrade.prof_area_id == profession.id, VacancyGrade.grade >= cutoff_value).all()
+
+        ids = []
+        for id_ins in prof_graded_vacancies:
+            ids.append(id_ins[0])
+
+        prof_dict['vacancies_array'] = ids
+
+        count = VacancyGrade.query.filter(
+            VacancyGrade.prof_area_id == profession.id, VacancyGrade.grade >= cutoff_value).count()
+
+        prof_dict['count'] = count
+
+        expiriense = VacancyGrade.query.with_entities(
+            Vacancy.vacancy_expirience, db.func.count(Vacancy.vacancy_expirience)).join(Vacancy.vacancy_grades).filter(VacancyGrade.prof_area_id == profession.id, VacancyGrade.grade >= cutoff_value).group_by(Vacancy.vacancy_expirience).all()
+
+        exp_list = []
+
+        for k, v in expiriense:
+            exp_dict = {}
+            if k == 'не требуется':
+                exp_dict['no_exp'] = [v]
+                exp_list.append(exp_dict)
+                no_exp.append(v)
+            if k == '1–3 года':
+                exp_dict['one_three_year'] = [v]
+                exp_list.append(exp_dict)
+                one_three_year.append(v)
+            if k == '3–6 лет':
+                exp_dict['three_six_year'] = [v]
+                exp_list.append(exp_dict)
+                three_six_year.append(v)
+            if k == 'более 6 лет':
+                exp_dict['more_six_year'] = [v]
+                exp_list.append(exp_dict)
+                more_six_year.append(v)
+
+        prof_dict['expiriense'] = exp_list
+
+        profession_vacancy.append(prof_dict)
+
+    expirience_dict['no_exp'] = no_exp
+    expirience_dict['one_three_year'] = one_three_year
+    expirience_dict['three_six_year'] = three_six_year
+    expirience_dict['more_six_year'] = more_six_year
+
+    ungraded_dict = {}
+    ungraded_dict['prof_id'] = professions_count + 1
+    ungraded_dict['prof_name'] = 'Unknown'
+
+    search_ungrades = db.session.query(VacancyGrade.vacancy_id, db.func.count(
+        VacancyGrade.vacancy_id)).filter(VacancyGrade.grade < 0.5).group_by(VacancyGrade.vacancy_id).all()
+
+    ungraded_vacancies_ids = []
+    ungraded_count = 0
+    for ungraded in search_ungrades:
+        if ungraded[1] == professions_count:
+            ungraded_vacancies_ids.append(ungraded[0])
+            ungraded_count += 1
+
+    ungraded_dict['vacancies_array'] = ungraded_vacancies_ids
+    ungraded_dict['count'] = ungraded_count
+    profession_vacancy.append(ungraded_dict)
+
+    data['profession_vacancies'] = profession_vacancy
+    data['areas_experience'] = [expirience_dict]
+
+    with open('vacancies_stat.json', mode='w+', encoding='utf8') as f:
+        json.dump(data, f, ensure_ascii=False,)
+
 
 
 def set_statistic():
