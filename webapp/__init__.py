@@ -392,7 +392,7 @@ def create_app():
 
         #statistic = set_json_statistic()
 
-        with open('vacancies_stat.json.json', mode='r', encoding='utf8') as f:
+        with open('vacancies_stat.json', mode='r', encoding='utf8') as f:
             data = json.load(f)
             languages = data['languages']
             prof_areas = data['profession_vacancies']
