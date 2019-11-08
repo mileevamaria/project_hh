@@ -66,23 +66,245 @@
     <div class="row">
          <div class="col-12">
              <h3>Выбрать навыки</h3>
-             </br>
-             <form action="{{ url_for('process_save_change_skills') }}" method="POST">
-                 <h5>Базы данных NoSQL</h5>
-                 {% for item_page in skills_nosql_page %}
-                 <li>
-                     {% if item_page.id in skills_nosql_base %}
-                        <input id="skills_nosql_0" name="skills_nosql" type="checkbox" value="{{ item_page.id }}" checked>
-                     {% else %}
-                        <input id="skills_nosql_1" name="skills_nosql" type="checkbox" value="{{ item_page.id }}">
-                     {% endif %}
-                        <label>{{ item_page.name }}</label>
-                 </li>
-                 {% endfor %}
-                 </br>
-                 <input class="btn btn-primary" type="submit" value="Сохранить изменения">
-             </form>
-             </br>
          </div>
     </div>
+    <form action="{{ url_for('process_save_change_skills') }}" method="POST">
+        <div class="row">
+
+            <div class="col-3">
+             </br>
+             <h5>Языки программирования</h5>
+             {% for item_page in skills_page_lang %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_lang_0" name="skills_lang" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_lang_1" name="skills_lang" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             </br>
+             <h5>Базы данных</h5>
+             {% for item_page in skills_page_db %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_db_0" name="skills_db" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_db_1" name="skills_db" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             </br>
+             <h5>Фреймворки</h5>
+             {% for item_page in skills_page_frame %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_frame_0" name="skills_frame" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_frame_1" name="skills_frame" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             </br>
+             <h5>Веб-протоколы</h5>
+             {% for item_page in skills_page_webprot %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_webprot_0" name="skills_webprot" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_webprot_1" name="skills_webprot" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Поисковые системы</h5>
+             {% for item_page in skills_page_search %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_search_0" name="skills_search" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_search_1" name="skills_search" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Веб-серверы</h5>
+             {% for item_page in skills_page_webser %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_webser_0" name="skills_webser" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_webser_1" name="skills_webser" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Брокеры сообщений</h5>
+             {% for item_page in skills_page_message %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_message_0" name="skills_message" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_message_1" name="skills_message" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Операционные системы</h5>
+             {% for item_page in skills_page_os %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_os_0" name="skills_os" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_os_1" name="skills_os" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Контроль версий</h5>
+             {% for item_page in skills_page_vcs %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_vcs_0" name="skills_vcs" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_vcs_1" name="skills_vcs" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Виртуализация</h5>
+             {% for item_page in skills_page_virt %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_virt_0" name="skills_virt" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_virt_1" name="skills_virt" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Автоматизация</h5>
+             {% for item_page in skills_page_auto %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_auto_0" name="skills_auto" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_auto_1" name="skills_auto" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>ORM</h5>
+             {% for item_page in skills_page_orm %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_orm_0" name="skills_orm" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_orm_1" name="skills_orm" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Системы управление проектами</h5>
+             {% for item_page in skills_page_spm %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_spm_0" name="skills_spm" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_spm_1" name="skills_spm" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Методы управления проектами</h5>
+             {% for item_page in skills_page_mpm %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_mpm_0" name="skills_mpm" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_mpm_1" name="skills_mpm" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+
+            <div class="col-3">
+             <h5>Системы мониторинга</h5>
+             {% for item_page in skills_page_monitor %}
+             <li>
+                 {% if item_page.id in skills_base %}
+                    <input id="skills_monitor_0" name="skills_monitor" type="checkbox" value="{{ item_page.id }}" checked>
+                 {% else %}
+                    <input id="skills_monitor_1" name="skills_monitor" type="checkbox" value="{{ item_page.id }}">
+                 {% endif %}
+                    <label>{{ item_page.name }}</label>
+             </li>
+             {% endfor %}
+                </br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                 <input class="btn btn-primary" type="submit" value="Сохранить изменения">
+            </div>
+        </div>
+    </form>
+    </br>
 {% endblock content  %}

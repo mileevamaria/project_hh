@@ -55,6 +55,7 @@ class User(db.Model, UserMixin):
     city = db.Column(db.String(80), nullable=True, server_default='Город')
     user = db.relationship('Skill', secondary=assoc_skill_user,
                            backref=db.backref('user', lazy='dynamic'))
+    favourites = db.relationship('Favourite', backref='user_favourite')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -97,9 +98,9 @@ class Skill(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    count = db.Column(db.Integer, nullable=True)
     category = db.relationship('Category', secondary=assoc_skill_category, backref=db.backref('catskill', lazy='dynamic'))
     skill = db.relationship('User', secondary=assoc_skill_user, backref=db.backref('user_skill', lazy='dynamic'))
-
 
 class Statistic(db.Model):
     __tablename__ = "statistic"

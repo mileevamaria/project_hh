@@ -1,25 +1,25 @@
 [
-  {"Базы данных  NoSQL": ["redis", "mongodb", "cassandra", "hbase", "influxdb"]},
+  {"1 Базы данных  NoSQL": ["redis", "mongodb", "cassandra", "hbase", "influxdb"]},
 
-  {"Базы данных SQL":  ["mysql", "postgre", "sqlite", "mariadb", "oracle", "clickhouse"]},
+  {"2 Базы данных SQL":  ["mysql", "postgre", "sqlite", "mariadb", "oracle", "clickhouse"]},
 
-  {"Язык программирования":  ["python", "java", "javascript",  "typescript",  "php",  "ruby", "r",  "c", "c++", "c#",
+  {"3 Язык программирования":  ["python", "java", "javascript",  "typescript",  "php",  "ruby", "r",  "c", "c++", "c#",
     "assembler", "golang", "swift", "kotlin"]},
 
-  {"Фреймворки": ["django", "flask", "tornado", "pytest", "unittest", "pyramid", "spring", "vue", "node.js", "kohana",
+  {"6 Фреймворки": ["django", "flask", "tornado", "pytest", "unittest", "pyramid", "spring", "vue", "node.js", "kohana",
     "laravel", "zend", "aiohttp", "scikit-learn", "spark", "numpy", "pandas", "scipy", "matplotlib", "tensorflow",
     "pytorch", "scrapy", "beautifulsoup", "extjs", "bootstrap", "react", "selenium", "yii"]},
 
-  {"Инструменты": ["nginx",  "memcached", "tomcat", "apache", "haproxy", "rabbitmq", "activemq", "celery", "kafka",
+  {"7 Инструменты": ["nginx",  "memcached", "tomcat", "apache", "haproxy", "rabbitmq", "activemq", "celery", "kafka",
     "elasticsearch", "kibana", "jmeter", "html", "css", "jquery", "ajax", "amp", "ec2", "redux", "fabric", "jupyter",
     "matlab", "keras", "tableau"]},
 
-  {"Автоматизация": ["ansible", "docker", "chef", "hadoop", "zookeeper", "consul", "zabbix", "puppet", "jenkins",
+  {"8 Автоматизация": ["ansible", "docker", "chef", "hadoop", "zookeeper", "consul", "zabbix", "puppet", "jenkins",
     "kubernetes", "bamboo", "teamcity", "saltstack", "grafana", "prometheus", "postfix", "garden", "maven"]},
 
-  {"Тестирование API":  ["soapui", "zeep", "postman", "odata", "awx", "graphql", "jmeter", "drf"]},
+  {"5 Тестирование API":  ["soapui", "zeep", "postman", "odata", "awx", "graphql", "jmeter", "drf"]},
 
-  {"Системы контроля версий": ["github", "gitlab", "bitbucket", "mercurial", "svn"]},
+  {"4 Системы контроля версий": ["github", "gitlab", "bitbucket", "mercurial", "svn"]},
 
-  {"ORM": ["sqlalchemy", "mongoengine", "hibernate"]}
+  {"9 ORM": ["sqlalchemy", "mongoengine", "hibernate"]}
 ]
