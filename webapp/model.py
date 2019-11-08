@@ -29,7 +29,7 @@ class Vacancy(db.Model):
     language = db.Column(db.String(5), nullable=True)
     vacancy_published_at = db.Column(db.TEXT, nullable=True)
     vacancy_graded = db.Column(db.Boolean, default=0, nullable=False)
-    vacancy_prof_area = db.Column(db.Integer)
+    vacancy_prof_area = db.Column(db.Integer, nullable=True)
 
     favourites = db.relationship('Favourite', backref='vacancy_favourite')
     vacancy_grades = db.relationship(
@@ -109,6 +109,7 @@ class Skill(db.Model):
     count = db.Column(db.Integer, nullable=True)
     category = db.relationship('Category', secondary=assoc_skill_category, backref=db.backref('catskill', lazy='dynamic'))
     skill = db.relationship('User', secondary=assoc_skill_user, backref=db.backref('user_skill', lazy='dynamic'))
+
 
 class Statistic(db.Model):
     __tablename__ = "statistic"
