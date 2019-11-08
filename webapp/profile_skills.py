@@ -1,4 +1,4 @@
-from webapp.model import db, Category, Skill
+from webapp.model import db, Category, Skill, ProfessionalArea
 
 
 def get_user_skills_from_database(user):
@@ -7,6 +7,13 @@ def get_user_skills_from_database(user):
     for skill_base in skills_base:
         skills_user.append(skill_base.id)
     return skills_user
+
+def get_user_areas_from_database(user):
+    areas_base = user.user_area
+    areas_user = []
+    for area_base in areas_base:
+        areas_user.append(area_base.id)
+    return areas_user
 
 def update_user_skills(skills_user, skills_category, skills_page, user):
     for skill_category in skills_category:
@@ -19,6 +26,25 @@ def update_user_skills(skills_user, skills_category, skills_page, user):
             skill_delete.user.remove(user)
             db.session.commit()
     return False
+
+def update_user_areas(areas_user, areas, areas_page, user):
+    for area in areas:
+        if (area not in areas_user) and (str(area) in areas_page):
+            area_add = ProfessionalArea.query.filter(ProfessionalArea.id == area).first()
+            area_add.user.append(user)
+            db.session.commit()
+        elif (area in areas_user) and (str(area) not in areas_page):
+            area_delete = ProfessionalArea.query.filter(ProfessionalArea.id == area).first()
+            area_delete.user.remove(user)
+            db.session.commit()
+    return False
+
+def get_areas():
+    areas = ProfessionalArea.query.all()
+    areas_get = []
+    for area in areas:
+        areas_get.append(area.id)
+    return areas_get
 
 def get_skills_lang():
     skills = Category.query.filter(Category.id == 1).first().catskill

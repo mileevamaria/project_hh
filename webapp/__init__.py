@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, url_for, request
+from flask import Flask, render_template, flash, redirect, url_for, request, session
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from flask_migrate import Migrate
 from webapp.model import db, Vacancy, User, Favourite, Category, Skill, ProfessionalArea, VacancyGrade
@@ -6,13 +6,15 @@ from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswor
 import os
 from webapp.statistic import set_statistic, get_languages, get_vacancies_count, get_grades
 from webapp.profile_skills import *
-from webapp.count_skills import count_skills
+from webapp.counters import count_skills, count_areas
+from sqlalchemy import or_
 import json
 
 """ export FLASK_APP=webapp && FLASK_ENV=development && flask run """
 
 
 def create_app():
+
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
@@ -22,6 +24,7 @@ def create_app():
     login_manager.login_view = 'login'
 
     migrate = Migrate(app, db)
+    urls = []
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -29,9 +32,15 @@ def create_app():
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
+        urls.append(url_for('index'))
+        print(urls)
+
         title = "Вакансии для разработчиков"
         page = request.args.get('page', 1, type=int)
-        vacancies = Vacancy.query.paginate(page=page, per_page=20)
+        vacancies = Vacancy.query.filter(Vacancy.vacancy_prof_area != None).paginate(page=page, per_page=20)
+        skills = Skill.query.all()
+        categories = Category.query.all()
+        areas = ProfessionalArea.query.all()
 
         if current_user.is_authenticated:
             favourite = Favourite.query.filter(
@@ -39,9 +48,48 @@ def create_app():
             favourite_vacancy = []
             for favour in favourite:
                 favourite_vacancy.append(favour.vacancy_id)
-            return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy)
+            return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy,
+                                   skills=skills, categories=categories, areas=areas)
         else:
-            return render_template('index.html', page_title=title, vacancies=vacancies)
+            return render_template('index.html', page_title=title, vacancies=vacancies,  skills=skills,
+                                   categories=categories, areas=areas)
+
+    @app.route('/search')
+    def search():
+        title = "Вакансии для разработчиков"
+        page = request.args.get('page', 1, type=int)
+        areas = ProfessionalArea.query.all()
+        skills = Skill.query.all()
+        categories = Category.query.all()
+
+        areas_page = [int(item) for item in request.args.getlist('areas')]
+        skills_page = [int(item) for item in request.args.getlist('skills')]
+
+        if request.method == 'GET':
+            print(areas_page)
+            print(skills_page)
+
+            skills_names = Skill.query.filter(or_(Skill.id == skill_page for skill_page in skills_page)).all()
+
+            vacancies = Vacancy.query.filter(or_(
+                (Vacancy.vacancy_prof_area == area_page for area_page in areas_page))).filter(or_(
+                *[Vacancy.vacancy_text_clean.ilike('%' + (skill.name) + '%') for skill in skills_names])).filter(
+                Vacancy.vacancy_prof_area != None).paginate(page=page, per_page=20)
+
+            if current_user.is_authenticated:
+                favourite = Favourite.query.filter(
+                    Favourite.user_id == current_user.id).all()
+                favourite_vacancy = []
+                for favour in favourite:
+                    favourite_vacancy.append(favour.vacancy_id)
+                return render_template('index.html', page_title=title, vacancies=vacancies, favourite=favourite_vacancy,
+                                       skills=skills, categories=categories, areas=areas, areas_page=areas_page,
+                                       skills_page=skills_page)
+            else:
+                return render_template('index.html', page_title=title, vacancies=vacancies, skills=skills,
+                                       categories=categories, areas=areas, areas_page=areas_page, skills_page=skills_page)
+
+        return False
 
     @app.route('/process-favourite/<int:id>', methods=['GET', 'POST'])
     @login_required
@@ -58,7 +106,7 @@ def create_app():
             db.session.commit()
             flash('Вакансия добавлена в избранное')
 
-        return redirect(url_for('index'))
+        return redirect(urls[-1])
 
     @app.route('/login')
     def login():
@@ -134,6 +182,9 @@ def create_app():
     @app.route('/profile', methods=['GET', 'POST'])
     @login_required
     def profile():
+        urls.append(url_for('profile'))
+        print(urls)
+
         title = "Профиль пользователя"
         form = ProfileForm()
         user = User.query.filter(
@@ -143,6 +194,12 @@ def create_app():
         for item in user.user_skill:
             skills_base.append(item.id)
 
+        areas_base = []
+        for item in user.user_area:
+            areas_base.append(item.id)
+        print(areas_base)
+
+        area_page = ProfessionalArea.query.all()
         skills_page_lang = Category.query.filter(Category.id == 1).first().catskill
         skills_page_db = Category.query.filter(Category.id == 2).first().catskill
         skills_page_frame = Category.query.filter(Category.id == 3).first().catskill
@@ -160,14 +217,14 @@ def create_app():
         skills_page_monitor = Category.query.filter(Category.id == 15).first().catskill
 
         return render_template('profile.html', page_title=title, form=form, user=user, skills_base=skills_base,
-                               skills_page_lang=skills_page_lang,skills_page_db=skills_page_db,
-                               skills_page_frame=skills_page_frame, skills_page_webprot=skills_page_webprot,
-                               skills_page_search=skills_page_search, skills_page_webser=skills_page_webser,
-                               skills_page_message=skills_page_message, skills_page_os=skills_page_os,
-                               skills_page_vcs=skills_page_vcs, skills_page_virt=skills_page_virt,
-                               skills_page_auto=skills_page_auto, skills_page_orm=skills_page_orm,
-                               skills_page_spm=skills_page_spm, skills_page_mpm=skills_page_mpm,
-                               skills_page_monitor=skills_page_monitor)
+                               areas_base=areas_base, area_page=area_page, skills_page_lang=skills_page_lang,
+                               skills_page_db=skills_page_db,skills_page_frame=skills_page_frame,
+                               skills_page_webprot=skills_page_webprot, skills_page_search=skills_page_search,
+                               skills_page_webser=skills_page_webser, skills_page_message=skills_page_message,
+                               skills_page_os=skills_page_os, skills_page_vcs=skills_page_vcs,
+                               skills_page_virt=skills_page_virt, skills_page_auto=skills_page_auto,
+                               skills_page_orm=skills_page_orm, skills_page_spm=skills_page_spm,
+                               skills_page_mpm=skills_page_mpm, skills_page_monitor=skills_page_monitor)
 
     @app.route('/process-save-changes-person', methods=['POST'])
     def process_save_changes_person():
@@ -194,12 +251,46 @@ def create_app():
         return render_template('favourite.html', page_title=title, favourites=favourites)
 
     @app.route('/profile/change_password')
+    @login_required
     def change_password():
         form = ChangePasswordForm()
         title = 'Изменить пароль'
         return render_template('change_password.html', page_title=title, form=form)
 
+    @app.route('/profile/relevant_vacancies')
+    @login_required
+    def relevant_vacancies():
+        urls.append(url_for('relevant_vacancies'))
+        print(urls)
+
+        title = "Подходящие вакансии"
+        user = User.query.filter(User.id == current_user.id).first()
+        page = request.args.get('page', 1, type=int)
+        skills_base = user.user_skill
+        areas_base = user.user_area
+
+        skills = [skill.id for skill in skills_base]
+        areas = [area.id for area in areas_base]
+
+        if skills or areas:
+            vacancies = Vacancy.query.filter(or_(
+                (Vacancy.vacancy_prof_area == area.id for area in areas_base))).filter(or_(
+                *[Vacancy.vacancy_text_clean.ilike('%' + (skill.name) + '%') for skill in skills_base])).filter(
+                Vacancy.vacancy_prof_area != None).paginate(page=page, per_page=20)
+
+        else:
+            vacancies = []
+
+        favourite = Favourite.query.filter(Favourite.user_id == current_user.id).all()
+        favourite_vacancy = []
+        for favour in favourite:
+            favourite_vacancy.append(favour.vacancy_id)
+
+        return render_template('relevant_vacancies.html', page_title=title, vacancies=vacancies,
+                               favourite=favourite_vacancy)
+
     @app.route('/process-change-password', methods=['POST'])
+    @login_required
     def process_change_password():
         form = ChangePasswordForm()
         user = User.query.filter(
@@ -232,10 +323,13 @@ def create_app():
         return redirect(url_for('favourite'))
 
     @app.route('/process-save-change-skills', methods=['POST'])
+    @login_required
     def process_save_change_skills():
         user = User.query.filter(User.id == current_user.id).first()
         skills_user = get_user_skills_from_database(user)
+        areas_user = get_user_areas_from_database(user)
 
+        areas = get_areas()
         skills_lang = get_skills_lang()
         skills_db = get_skills_db()
         skills_frame = get_skills_frame()
@@ -253,6 +347,7 @@ def create_app():
         skills_monitor = get_skills_monitor()
 
         if request.form:
+            areas_page = request.form.getlist("areas")
             skills_page_lang = request.form.getlist("skills_lang")
             skills_page_db = request.form.getlist("skills_db")
             skills_page_frame = request.form.getlist("skills_frame")
@@ -269,6 +364,7 @@ def create_app():
             skills_page_mpm = request.form.getlist("skills_mpm")
             skills_page_monitor = request.form.getlist("skills_monitor")
 
+            update_user_areas(areas_user, areas, areas_page, user)
             update_user_skills(skills_user, skills_lang, skills_page_lang, user)
             update_user_skills(skills_user, skills_db, skills_page_db, user)
             update_user_skills(skills_user, skills_frame, skills_page_frame, user)

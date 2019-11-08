@@ -43,3 +43,7 @@ Flask-Migrate==2.5.2
 numpy==1.17.3
 pandas==0.25.3
 pytz==2019.3
+Whoosh==2.7.4
+blinker==1.4
+flask-whooshalchemy==0.56
+

@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-8">
+    <div class="col-7">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <div class="alert alert-warning" role="alert">
@@ -17,7 +17,15 @@
         <a href="{{ vacancy.vacancy_url }}">
             <h4>{{ vacancy.vacancy_name }}</h4>
         </a>
+        <h6>{{ vacancy.company_name}}</h6>
         <p>{{ vacancy.vacancy_text_clean | truncate(500) }}</p>
+        <i> Локация:</i>
+        <i>{{ vacancy.vacancy_city }}</i>
+        </br>
+        <i> Дата публикации:</i>
+        <i>{{ vacancy.vacancy_published_at }}</i>
+        </br>
+        </br>
         {% if vacancy.id in favourite %}
         <button type="button" class="btn btn-sm btn-dark" disabled>В избранном</button>
         {% else %}
@@ -27,17 +35,66 @@
         {% endif %}
         <hr />
         {% endfor %}
+        <ul class="pagination">
         {% for page_num in vacancies.iter_pages() %}
-        {% if page_num %}
-        {% if vacancies.page == page_num %}
-        <a class="btn btn-dark mb-4" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
-        {% else %}
-        <a class="btn btn-outline-dark mb-4" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
-        {% endif %}
-        {% else %}
-        ...
-        {% endif %}
+            {% if page_num %}
+            {% if vacancies.page == page_num %}
+            <li class="page-item active">
+                <a class="page-link" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+            {% else %}
+             <li class="page-item">
+                <a class="page-link" href="">...</a>
+            </li>
+            {% endif %}
         {% endfor %}
+        </ul>
     </div>
+    <div class="col-1">
+    </div>
+     <div class="col-4">
+         <h3>Фильтр</h3>
+         <div class="card bg-light mb-3" style="max-width: 18rem;">
+             <div class="mx-auto" style="width: 250px;">
+                 </br>
+                 <h6>Специализация</h6>
+             </div>
+             <form action="{{ url_for('search') }}" method="GET">
+                 <div class="mx-auto" style="width: 250px;">
+                 {% for area in areas %}
+                     <li>
+                         {% if area.id in areas_page %}
+                            <input id="area_0" name="areas" type="checkbox" value="{{ area.id }}" checked>
+                         {% else %}
+                            <input id="area_1" name="areas" type="checkbox" value="{{ area.id }}">
+                         {% endif %}
+                         <label>{{ area.area_name }}</label>
+                         <span class="badge badge-primary badge-pill">{{ area.count }}</span>
+                     </li>
+                 {% endfor %}
+                 {% for category in categories %}
+                 </br>
+                 <h6>{{ category.name }}</h6>
+                    {% for skill in category.catskill %}
+                        <li>
+                            {% if skill.id in skills_page %}
+                                <input id="skills_0" name="skills" type="checkbox" value="{{ skill.id }}" checked>
+                            {% else %}
+                                <input id="skills_1" name="skills" type="checkbox" value="{{ skill.id }}">
+                            {% endif %}
+                            <label>{{ skill.name }}</label>
+                            <span class="badge badge-primary badge-pill">{{ skill.count }}</span>
+                        </li>
+                    {% endfor %}
+                 {% endfor %}
+                 </br>
+                </div>
+                <input class="btn btn-primary btn-block" type="submit" value="Отфильтровать">
+             </form>
+         </div>
+     </div>
 </div>
 {% endblock content %}

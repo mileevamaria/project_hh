@@ -29,6 +29,7 @@ class Vacancy(db.Model):
     language = db.Column(db.String(5), nullable=True)
     vacancy_published_at = db.Column(db.TEXT, nullable=True)
     vacancy_graded = db.Column(db.Boolean, default=0, nullable=False)
+    vacancy_prof_area = db.Column(db.Integer)
 
     favourites = db.relationship('Favourite', backref='vacancy_favourite')
     vacancy_grades = db.relationship(
@@ -39,6 +40,11 @@ assoc_skill_user = db.Table("assoc_skill_user",
                             db.Column("user_id", db.Integer,
                                       db.ForeignKey("users.id")),
                             db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")))
+
+assoc_area_user = db.Table("assoc_area_user",
+                            db.Column("user_id", db.Integer,
+                                      db.ForeignKey("users.id")),
+                            db.Column("area_id", db.Integer, db.ForeignKey("prof_areas.id")))
 
 
 class User(db.Model, UserMixin):
@@ -54,6 +60,8 @@ class User(db.Model, UserMixin):
                           server_default='Фамилия')
     city = db.Column(db.String(80), nullable=True, server_default='Город')
     user = db.relationship('Skill', secondary=assoc_skill_user,
+                           backref=db.backref('user', lazy='dynamic'))
+    user_1 = db.relationship('ProfessionalArea', secondary=assoc_area_user,
                            backref=db.backref('user', lazy='dynamic'))
     favourites = db.relationship('Favourite', backref='user_favourite')
 
@@ -122,9 +130,12 @@ class ProfessionalArea(db.Model):
     area_name = db.Column(db.String(100), nullable=True)
     created_at = db.Column(
         db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+    count = db.Column(db.Integer, nullable=True)
 
     prof_grades = db.relationship(
         'VacancyGrade', backref='prof_grades', lazy=True)
+    area = db.relationship('User', secondary=assoc_area_user,
+                           backref=db.backref('user_area', lazy='dynamic'))
 
 
 class VacancyGrade(db.Model):

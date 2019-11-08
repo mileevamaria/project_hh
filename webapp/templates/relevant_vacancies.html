@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-7">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+            {% for message in messages %}
+            {{ message }}<br>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <h3>Подходящие вакансии</h3>
+        {% if vacancies %}
+        {% for vacancy in vacancies.items %}
+        <a href="{{ vacancy.vacancy_url }}">
+            <h4>{{ vacancy.vacancy_name }}</h4>
+        </a>
+        <h6>{{ vacancy.company_name}}</h6>
+        <p>{{ vacancy.vacancy_text_clean | truncate(500) }}</p>
+        <i> Локация:</i>
+        <i>{{ vacancy.vacancy_city }}</i>
+        </br>
+        <i> Дата публикации:</i>
+        <i>{{ vacancy.vacancy_published_at }}</i>
+        </br>
+        </br>
+        {% if vacancy.id in favourite %}
+        <button type="button" class="btn btn-sm btn-dark" disabled>В избранном</button>
+        {% else %}
+        <a href="{{ url_for('process_favourite', id=vacancy.id) }}" class="btn btn-outline-dark btn-sm" role="button">
+            Добавить в избранное
+        </a>
+        {% endif %}
+        <hr />
+        {% endfor %}
+        <ul class="pagination">
+        {% for page_num in vacancies.iter_pages() %}
+            {% if page_num %}
+            {% if vacancies.page == page_num %}
+            <li class="page-item active">
+                <a class="page-link" href="{{ url_for('relevant_vacancies', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('relevant_vacancies', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+            {% else %}
+             <li class="page-item">
+                <a class="page-link" href="">...</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+            {% else %}
+          </br>
+        <p>Для вас нет подходящих вакансий</p>
+        <p>Для подбора вакансий выберите навыки в профиле</p>
+        {% endif %}
+        </ul>
+    </div>
+</div>
+{% endblock content %}

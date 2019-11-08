@@ -17,6 +17,14 @@
             {% if favourites %}
                 {% for favourite in favourites %}
                 <a href="{{ favourite.vacancy_favourite.vacancy_url }}"><h4>{{ favourite.vacancy_favourite.vacancy_name }}</h4></a>
+                <h6>{{ favourite.vacancy_favourite.company_name}}</h6>
+                <i> Локация:</i>
+                <i>{{ favourite.vacancy_favourite.vacancy_city }}</i>
+                </br>
+                <i> Дата публикации:</i>
+                <i>{{ favourite.vacancy_favourite.vacancy_published_at }}</i>
+                </br>
+                </br>
                 <a href="{{ url_for('process_delete', id=favourite.id) }}" class="btn btn-outline-dark btn-sm" role="button">
                       Удалить из избранного
                     </a>
