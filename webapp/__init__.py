@@ -6,7 +6,6 @@ from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswor
 import os
 from webapp.statistic import set_statistic, get_languages, get_vacancies_count, get_grades, set_json_statistic
 from webapp.profile_skills import *
-from webapp.counters import count_skills, count_areas
 from sqlalchemy import or_
 import json
 from ast import literal_eval

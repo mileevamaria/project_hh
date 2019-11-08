@@ -76,21 +76,37 @@ def vacancy_grade():
                 db.session.commit()
     return False
 
+def filter_test():
+    with app.app_context():
+        areas_page = [1, 2]
+        skills_page = [11, 21]
+        skills = Skill.query.filter(or_(Skill.id == skill_page for skill_page in skills_page)).all()
+
+        vacancies = Vacancy.query.filter(or_(
+            (Vacancy.vacancy_prof_area == area_page for area_page in areas_page))).filter(or_(
+            *[Vacancy.vacancy_text_clean.ilike('%' + (skill.name) + '%') for skill in skills])).all()
+
+        for vacancy in vacancies:
+            if vacancy.id <= 100:
+                print(vacancy.id)
+
 
 with app.app_context():
-    areas_page = [1, 2]
-    skills_page = [11, 21]
-    skills = Skill.query.filter(or_(Skill.id == skill_page for skill_page in skills_page)).all()
+    vacancies = Vacancy.query.filter(or_(Vacancy.id == 5481, Vacancy.id == 5482)).all()
+    skills = Skill.query.filter(or_(Skill.id == 1, Skill.id == 26)).all()
 
-    vacancies = Vacancy.query.filter(or_(
-        (Vacancy.vacancy_prof_area == area_page for area_page in areas_page))).filter(or_(
-        *[Vacancy.vacancy_text_clean.ilike('%' + (skill.name) + '%') for skill in skills])).all()
+    counter = {}
+    for vacancy in vacancies:
+        print(vacancy.vacancy_text_clean)
+    for skill in skills:
+        print(skill.name)
+        counter[skill.name] = 0
+    print(counter)
 
     for vacancy in vacancies:
-        if vacancy.id <= 100:
-            print(vacancy.id)
+        for skill in skills:
+            if skill.name.lower() in vacancy.vacancy_text_clean.lower():
+                counter[skill.name] += 1
 
-
-
-
+    print(counter)
 
