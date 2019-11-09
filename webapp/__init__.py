@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from webapp.model import db, Vacancy, User, Favourite, Category, Skill, ProfessionalArea, VacancyGrade
 from webapp.forms import LoginForm, ProfileForm, RegistrationForm, ChangePasswordForm
 import os
-from webapp.statistic import set_statistic, get_languages, get_vacancies_count, get_grades, set_json_statistic
+from webapp.statistic import set_json_statistic, get_words_stat
 from webapp.profile_skills import *
 from sqlalchemy import or_
 import json
@@ -418,15 +418,19 @@ def create_app():
 
         #url = 'https://hh.ru/vacancy/34309601'
 
-        #statistic = set_json_statistic()
+        # statistic = set_json_statistic()
         # update_vacancies = copy_vacancies()
+        #words_stat = get_words_stat()
 
-        with open('vacancies_stat.json', mode='r', encoding='utf8') as f:
-            data = json.load(f)
-            languages = data['languages']
-            prof_areas = data['profession_vacancies']
-            area_exp = data['areas_experience']
+        with open('vacancies_stat.json', mode='r', encoding='utf8') as vs:
+            vacstat = json.load(vs)
+            languages = vacstat['languages']
+            prof_areas = vacstat['profession_vacancies']
+            area_exp = vacstat['areas_experience']
 
-        return render_template('statistic.html', page_title=title, prof_areas=prof_areas, area_exp=area_exp, languages=languages)
+        with open('words_stat.json', mode='r', encoding='utf8') as ws:
+            words_stat = json.load(ws)
+
+        return render_template('statistic.html', page_title=title, prof_areas=prof_areas, area_exp=area_exp, languages=languages, words_stat=words_stat)
 
     return app
