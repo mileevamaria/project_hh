@@ -1,4 +1,4 @@
-"""empty message
+"""create assos area users and update columns
 
 Revision ID: bb044280ada3
 Revises: a4f024d8b298
