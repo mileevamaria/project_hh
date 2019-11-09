@@ -1,4 +1,4 @@
-from webapp.model import db, Vacancy, Statistic, ProfessionalArea, VacancyGrade
+from webapp.model import db, Vacancy, Statistic, ProfessionalArea, VacancyGrade, SpyderVacancies
 from sqlalchemy import func, and_
 import pandas as pd
 import numpy as np
@@ -9,8 +9,44 @@ from collections import defaultdict
 
 """ todays_datetime = datetime(datetime.today().year,
                            datetime.today().month, datetime.today().day) """
-todays_datetime = "2019-11-4"
+todays_datetime = "2019-11-8"
 cutoff_value = 0.5
+
+
+def copy_vacancies():
+    vacancies_urls = SpyderVacancies.query.with_entities(
+        SpyderVacancies.vacancy_url).filter(SpyderVacancies.created_at >= todays_datetime).all()
+
+    for url in vacancies_urls:
+        check_url = Vacancy.query.filter(
+            Vacancy.vacancy_url == url[0]).first()
+
+        if check_url is None:
+            get_new_vacancy = SpyderVacancies.query.filter(
+                SpyderVacancies.vacancy_url == url[0]).first()
+
+
+            set_new_vacancy = Vacancy(
+                vacancy_url=get_new_vacancy.vacancy_url,
+                vacancy_name=get_new_vacancy.vacancy_name,
+                vacancy_city=get_new_vacancy.vacancy_city,
+                vacancy_country=get_new_vacancy.vacancy_country,
+                vacancy_salary_value=get_new_vacancy.vacancy_salary_value,
+                vacancy_salary_min=get_new_vacancy.vacancy_salary_min,
+                vacancy_salary_max=get_new_vacancy.vacancy_salary_max,
+                vacancy_salary_currency=get_new_vacancy.vacancy_salary_currency,
+                vacancy_salary_period=get_new_vacancy.vacancy_salary_period,
+                company_name=get_new_vacancy.company_name,
+                vacancy_expirience=get_new_vacancy.vacancy_expirience,
+                vacancy_employment_type=get_new_vacancy.vacancy_employment_type,
+                vacancy_text_clean=get_new_vacancy.vacancy_text_clean,
+                vacancy_key_skills=get_new_vacancy.vacancy_key_skills,
+                industry=get_new_vacancy.industry,
+                language=get_new_vacancy.language,
+                vacancy_published_at=get_new_vacancy.vacancy_published_at
+            )
+            db.session.add(set_new_vacancy)
+            db.session.commit()
 
 
 def set_json_statistic():
@@ -119,7 +155,6 @@ def set_json_statistic():
 
     with open('vacancies_stat.json', mode='w+', encoding='utf8') as f:
         json.dump(data, f, ensure_ascii=False,)
-
 
 
 def set_statistic():

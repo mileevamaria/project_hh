@@ -38,7 +38,8 @@ def create_app():
 
         title = "Вакансии для разработчиков"
         page = request.args.get('page', 1, type=int)
-        vacancies = Vacancy.query.filter(Vacancy.vacancy_prof_area != None).paginate(page=page, per_page=20)
+        vacancies = Vacancy.query.filter(
+            Vacancy.vacancy_prof_area != None).paginate(page=page, per_page=20)
         skills = Skill.query.all()
         categories = Category.query.all()
         areas = ProfessionalArea.query.all()
@@ -70,11 +71,12 @@ def create_app():
             print(areas_page)
             print(skills_page)
 
-            skills_names = Skill.query.filter(or_(Skill.id == skill_page for skill_page in skills_page)).all()
+            skills_names = Skill.query.filter(
+                or_(Skill.id == skill_page for skill_page in skills_page)).all()
 
             vacancies = Vacancy.query.filter(or_(
                 (Vacancy.vacancy_prof_area == area_page for area_page in areas_page))).filter(or_(
-                *[Vacancy.vacancy_text_clean.ilike('%' + (skill.name) + '%') for skill in skills_names])).filter(
+                    *[Vacancy.vacancy_text_clean.ilike('%' + (skill.name) + '%') for skill in skills_names])).filter(
                 Vacancy.vacancy_prof_area != None).paginate(page=page, per_page=20)
 
             if current_user.is_authenticated:
@@ -201,25 +203,40 @@ def create_app():
         print(areas_base)
 
         area_page = ProfessionalArea.query.all()
-        skills_page_lang = Category.query.filter(Category.id == 1).first().catskill
-        skills_page_db = Category.query.filter(Category.id == 2).first().catskill
-        skills_page_frame = Category.query.filter(Category.id == 3).first().catskill
-        skills_page_webprot = Category.query.filter(Category.id == 4).first().catskill
-        skills_page_search = Category.query.filter(Category.id == 5).first().catskill
-        skills_page_webser = Category.query.filter(Category.id == 6).first().catskill
-        skills_page_message = Category.query.filter(Category.id == 7).first().catskill
-        skills_page_os = Category.query.filter(Category.id == 8).first().catskill
-        skills_page_vcs = Category.query.filter(Category.id == 9).first().catskill
-        skills_page_virt = Category.query.filter(Category.id == 10).first().catskill
-        skills_page_auto = Category.query.filter(Category.id == 11).first().catskill
-        skills_page_orm = Category.query.filter(Category.id == 12).first().catskill
-        skills_page_spm = Category.query.filter(Category.id == 13).first().catskill
-        skills_page_mpm = Category.query.filter(Category.id == 14).first().catskill
-        skills_page_monitor = Category.query.filter(Category.id == 15).first().catskill
+        skills_page_lang = Category.query.filter(
+            Category.id == 1).first().catskill
+        skills_page_db = Category.query.filter(
+            Category.id == 2).first().catskill
+        skills_page_frame = Category.query.filter(
+            Category.id == 3).first().catskill
+        skills_page_webprot = Category.query.filter(
+            Category.id == 4).first().catskill
+        skills_page_search = Category.query.filter(
+            Category.id == 5).first().catskill
+        skills_page_webser = Category.query.filter(
+            Category.id == 6).first().catskill
+        skills_page_message = Category.query.filter(
+            Category.id == 7).first().catskill
+        skills_page_os = Category.query.filter(
+            Category.id == 8).first().catskill
+        skills_page_vcs = Category.query.filter(
+            Category.id == 9).first().catskill
+        skills_page_virt = Category.query.filter(
+            Category.id == 10).first().catskill
+        skills_page_auto = Category.query.filter(
+            Category.id == 11).first().catskill
+        skills_page_orm = Category.query.filter(
+            Category.id == 12).first().catskill
+        skills_page_spm = Category.query.filter(
+            Category.id == 13).first().catskill
+        skills_page_mpm = Category.query.filter(
+            Category.id == 14).first().catskill
+        skills_page_monitor = Category.query.filter(
+            Category.id == 15).first().catskill
 
         return render_template('profile.html', page_title=title, form=form, user=user, skills_base=skills_base,
                                areas_base=areas_base, area_page=area_page, skills_page_lang=skills_page_lang,
-                               skills_page_db=skills_page_db,skills_page_frame=skills_page_frame,
+                               skills_page_db=skills_page_db, skills_page_frame=skills_page_frame,
                                skills_page_webprot=skills_page_webprot, skills_page_search=skills_page_search,
                                skills_page_webser=skills_page_webser, skills_page_message=skills_page_message,
                                skills_page_os=skills_page_os, skills_page_vcs=skills_page_vcs,
@@ -276,13 +293,14 @@ def create_app():
         if skills or areas:
             vacancies = Vacancy.query.filter(or_(
                 (Vacancy.vacancy_prof_area == area.id for area in areas_base))).filter(or_(
-                *[Vacancy.vacancy_text_clean.ilike('%' + (skill.name) + '%') for skill in skills_base])).filter(
+                    *[Vacancy.vacancy_text_clean.ilike('%' + (skill.name) + '%') for skill in skills_base])).filter(
                 Vacancy.vacancy_prof_area != None).paginate(page=page, per_page=20)
 
         else:
             vacancies = []
 
-        favourite = Favourite.query.filter(Favourite.user_id == current_user.id).all()
+        favourite = Favourite.query.filter(
+            Favourite.user_id == current_user.id).all()
         favourite_vacancy = []
         for favour in favourite:
             favourite_vacancy.append(favour.vacancy_id)
@@ -366,21 +384,30 @@ def create_app():
             skills_page_monitor = request.form.getlist("skills_monitor")
 
             update_user_areas(areas_user, areas, areas_page, user)
-            update_user_skills(skills_user, skills_lang, skills_page_lang, user)
+            update_user_skills(skills_user, skills_lang,
+                               skills_page_lang, user)
             update_user_skills(skills_user, skills_db, skills_page_db, user)
-            update_user_skills(skills_user, skills_frame, skills_page_frame, user)
-            update_user_skills(skills_user, skills_webprot, skills_page_webprot, user)
-            update_user_skills(skills_user, skills_search, skills_page_search, user)
-            update_user_skills(skills_user, skills_webser, skills_page_webser, user)
-            update_user_skills(skills_user, skills_message, skills_page_message, user)
+            update_user_skills(skills_user, skills_frame,
+                               skills_page_frame, user)
+            update_user_skills(skills_user, skills_webprot,
+                               skills_page_webprot, user)
+            update_user_skills(skills_user, skills_search,
+                               skills_page_search, user)
+            update_user_skills(skills_user, skills_webser,
+                               skills_page_webser, user)
+            update_user_skills(skills_user, skills_message,
+                               skills_page_message, user)
             update_user_skills(skills_user, skills_os, skills_page_os, user)
             update_user_skills(skills_user, skills_vcs, skills_page_vcs, user)
-            update_user_skills(skills_user, skills_virt, skills_page_virt, user)
-            update_user_skills(skills_user, skills_auto, skills_page_auto, user)
+            update_user_skills(skills_user, skills_virt,
+                               skills_page_virt, user)
+            update_user_skills(skills_user, skills_auto,
+                               skills_page_auto, user)
             update_user_skills(skills_user, skills_orm, skills_page_orm, user)
             update_user_skills(skills_user, skills_spm, skills_page_spm, user)
             update_user_skills(skills_user, skills_mpm, skills_page_mpm, user)
-            update_user_skills(skills_user, skills_monitor, skills_page_monitor, user)
+            update_user_skills(skills_user, skills_monitor,
+                               skills_page_monitor, user)
 
         flash('Изменения сохранены')
         return redirect(url_for('profile'))
@@ -389,7 +416,10 @@ def create_app():
     def statistic():
         title = 'Статистика вакансий'
 
+        #url = 'https://hh.ru/vacancy/34309601'
+
         #statistic = set_json_statistic()
+        # update_vacancies = copy_vacancies()
 
         with open('vacancies_stat.json', mode='r', encoding='utf8') as f:
             data = json.load(f)
