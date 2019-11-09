@@ -23,9 +23,9 @@ def count_areas():
     with app.app_context():
         vacancies = Vacancy.query.all()
         areas = ProfessionalArea.query.all()
-        for area in areas:
-            area.count = 0
-            db.session.commit()
+        #for area in areas:
+            #area.count = 0
+            #db.session.commit()
 
         for vacancy in vacancies:
             for area in areas:
@@ -35,4 +35,4 @@ def count_areas():
     return False
 
 
-count_areas()
+count_skills()
