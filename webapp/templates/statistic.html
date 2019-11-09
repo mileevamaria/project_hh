@@ -9,6 +9,11 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap&subset=cyrillic"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- Resources -->
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/plugins/wordCloud.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
     <title>{{ page_title }}</title>
 </head>
 
@@ -118,6 +123,84 @@
                                 </header>
                                 <div class="card-content">
                                     <div id="chartProfExp"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-6">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">BigData</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="bigdatawords"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">Development</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="developmentwords"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-6">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">DevOps</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="devopswords"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">QA</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="qawords"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-6">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">SystemAdministration</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="sysadwords"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">Teamlead</p>
+                                </header>
+                                <div class="card-content">
+                                    <div id="teamleadwords"></div>
                                 </div>
                             </div>
                         </div>
@@ -265,68 +348,290 @@
         </script>
         <script>
             var options = {
-            chart: {
-                height: 350,
-                type: 'bar',
-                stacked: true,
-                stackType: '100%'
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: true,
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                    stacked: true,
+                    stackType: '100%'
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                    },
+
+                },
+                stroke: {
+                    width: 1,
+                    colors: ['#fff']
+                },
+                series: [{
+                    name: 'не требуется',
+                    data: {{area_exp[0]['no_exp']}}
+                },{
+                    name: '1–3 года',
+                    data: {{area_exp[0]['one_three_year']}}
+                },{
+                    name: '3–6 лет',
+                    data: {{area_exp[0]['three_six_year']}}
+                },{
+                    name: 'более 6 лет',
+                    data: {{area_exp[0]['more_six_year']}}
+                }],
+                xaxis: {
+                    categories: ['BigData', 'Development', 'DevOps', 'QA', 'SystemAdministration', 'Teaching', 'Teamlead'],
                 },
 
-            },
-            stroke: {
-                width: 1,
-                colors: ['#fff']
-            },
-            series: [{
-                name: 'не требуется',
-                data: {{area_exp[0]['no_exp']}}
-            },{
-                name: '1–3 года',
-                data: {{area_exp[0]['one_three_year']}}
-            },{
-                name: '3–6 лет',
-                data: {{area_exp[0]['three_six_year']}}
-            },{
-                name: 'более 6 лет',
-                data: {{area_exp[0]['more_six_year']}}
-            }],
-            xaxis: {
-                categories: ['BigData', 'Development', 'DevOps', 'QA', 'SystemAdministration', 'Teaching', 'Teamlead'],
-            },
-
-            tooltip: {
-                    y: {
-                        formatter: function(val) {
-                        return val
+                tooltip: {
+                        y: {
+                            formatter: function(val) {
+                            return val
+                        }
                     }
+                },
+                fill: {
+                    opacity: 1
+
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'left',
+                    offsetX: 40
                 }
-            },
-            fill: {
-                opacity: 1
-
-            },
-
-            legend: {
-                position: 'top',
-                horizontalAlign: 'left',
-                offsetX: 40
             }
-        }
+            var chart = new ApexCharts(
+                    document.querySelector("#chartProfExp"),
+                    options
+                );
+            chart.render();
+        </script>
+        <script>
+        bd_stat = {{ words_stat[0].words_counter | tojson | safe }}
+        am4core.ready(function() {
 
-       var chart = new ApexCharts(
-            document.querySelector("#chartProfExp"),
-            options
-        );
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
 
-        chart.render();
+        var chart = am4core.create("bigdatawords", am4plugins_wordCloud.WordCloud);
+        var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+        series.randomness = 0.1;
+        series.rotationThreshold = 0.5;
+
+        series.data = bd_stat;
+
+        series.dataFields.word = "tag";
+        series.dataFields.value = "count";
+
+        series.heatRules.push({
+        "target": series.labels.template,
+        "property": "fill",
+        "min": am4core.color("#0000CC"),
+        "max": am4core.color("#CC00CC"),
+        "dataField": "value"
+        });
+
+        series.labels.template.tooltipText = "{word}: {value}";
+
+        var hoverState = series.labels.template.states.create("hover");
+        hoverState.properties.fill = am4core.color("#FF0000");
+
+        });
+        </script>
+
+        <script>
+        dev_stat = {{ words_stat[1].words_counter | tojson | safe }}
+        am4core.ready(function() {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        var chart = am4core.create("developmentwords", am4plugins_wordCloud.WordCloud);
+        var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+        series.randomness = 0.1;
+        series.rotationThreshold = 0.5;
+
+        series.data = dev_stat;
+
+        series.dataFields.word = "tag";
+        series.dataFields.value = "count";
+
+        series.heatRules.push({
+        "target": series.labels.template,
+        "property": "fill",
+        "min": am4core.color("#0000CC"),
+        "max": am4core.color("#CC00CC"),
+        "dataField": "value"
+        });
+
+        series.labels.template.tooltipText = "{word}: {value}";
+
+        var hoverState = series.labels.template.states.create("hover");
+        hoverState.properties.fill = am4core.color("#FF0000");
+
+        });
+        </script>
+        <script>
+        ops_stat = {{ words_stat[2].words_counter | tojson | safe }}
+        am4core.ready(function() {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        var chart = am4core.create("devopswords", am4plugins_wordCloud.WordCloud);
+        var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+        series.randomness = 0.1;
+        series.rotationThreshold = 0.5;
+
+        series.data = ops_stat;
+
+        series.dataFields.word = "tag";
+        series.dataFields.value = "count";
+
+        series.heatRules.push({
+        "target": series.labels.template,
+        "property": "fill",
+        "min": am4core.color("#0000CC"),
+        "max": am4core.color("#CC00CC"),
+        "dataField": "value"
+        });
+
+        series.labels.template.tooltipText = "{word}: {value}";
+
+        var hoverState = series.labels.template.states.create("hover");
+        hoverState.properties.fill = am4core.color("#FF0000");
+
+        });
+        </script>
+        <script>
+        qa_stat = {{ words_stat[3].words_counter | tojson | safe }}
+        am4core.ready(function() {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        var chart = am4core.create("qawords", am4plugins_wordCloud.WordCloud);
+        var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+        series.randomness = 0.1;
+        series.rotationThreshold = 0.5;
+
+        series.data = qa_stat;
+
+        series.dataFields.word = "tag";
+        series.dataFields.value = "count";
+
+        series.heatRules.push({
+        "target": series.labels.template,
+        "property": "fill",
+        "min": am4core.color("#0000CC"),
+        "max": am4core.color("#CC00CC"),
+        "dataField": "value"
+        });
+
+        series.labels.template.tooltipText = "{word}: {value}";
+
+        var hoverState = series.labels.template.states.create("hover");
+        hoverState.properties.fill = am4core.color("#FF0000");
+
+        });
+        </script>
+        <script>
+        sysad_stat = {{ words_stat[4].words_counter | tojson | safe }}
+        am4core.ready(function() {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        var chart = am4core.create("sysadwords", am4plugins_wordCloud.WordCloud);
+        var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+        series.randomness = 0.1;
+        series.rotationThreshold = 0.5;
+
+        series.data = sysad_stat;
+
+        series.dataFields.word = "tag";
+        series.dataFields.value = "count";
+
+        series.heatRules.push({
+        "target": series.labels.template,
+        "property": "fill",
+        "min": am4core.color("#0000CC"),
+        "max": am4core.color("#CC00CC"),
+        "dataField": "value"
+        });
+
+        series.labels.template.tooltipText = "{word}: {value}";
+
+        var hoverState = series.labels.template.states.create("hover");
+        hoverState.properties.fill = am4core.color("#FF0000");
+
+        });
+        </script>
+        <script>
+        lead_stat = {{ words_stat[6].words_counter | tojson | safe }}
+        am4core.ready(function() {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        var chart = am4core.create("teamleadwords", am4plugins_wordCloud.WordCloud);
+        var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+        series.randomness = 0.1;
+        series.rotationThreshold = 0.5;
+
+        series.data = lead_stat;
+
+        series.dataFields.word = "tag";
+        series.dataFields.value = "count";
+
+        series.heatRules.push({
+        "target": series.labels.template,
+        "property": "fill",
+        "min": am4core.color("#0000CC"),
+        "max": am4core.color("#CC00CC"),
+        "dataField": "value"
+        });
+
+        series.labels.template.tooltipText = "{word}: {value}";
+
+        var hoverState = series.labels.template.states.create("hover");
+        hoverState.properties.fill = am4core.color("#FF0000");
+
+        });
         </script>
 
 
     {% endblock %}
+    <style>
+        #bigdatawords {
+        width: 100%;
+        height: 400px;
+        }
+        #developmentwords {
+        width: 100%;
+        height: 400px;
+        }
+        #devopswords {
+        width: 100%;
+        height: 400px;
+        }
+        #qawords {
+        width: 100%;
+        height: 400px;
+        }
+        #sysadwords {
+        width: 100%;
+        height: 400px;
+        }
+        #teamleadwords {
+        width: 100%;
+        height: 400px;
+        }
+    </style>
 </body>
 
 </html>

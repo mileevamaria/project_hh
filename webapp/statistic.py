@@ -6,11 +6,65 @@ import json
 from datetime import datetime
 from ast import literal_eval
 from collections import defaultdict
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import string
+from collections import Counter
 
 """ todays_datetime = datetime(datetime.today().year,
                            datetime.today().month, datetime.today().day) """
 todays_datetime = "2019-11-8"
 cutoff_value = 0.5
+
+
+def get_words_stat():
+    custom_stopwords = ['–', '—', '«', '»',
+                        'опыт', 'работы', 'знания', 'требования', 'тк', 'рф',
+                        'это', 'график', 'обязанности', 'дмс', 'в', 'мы']
+    english_stopwords = stopwords.words('english')
+    stop_words = stopwords.words('russian') + \
+        english_stopwords + custom_stopwords
+
+    words_stat = []
+
+    with open('vacancies_stat.json', mode='r', encoding='utf8') as f:
+        data = json.load(f)
+
+        prof_areas = data['profession_vacancies']
+
+        for prof_area in prof_areas:
+
+            prof_words_stat = {}
+
+            prof_words_stat['prof_area'] = prof_area['prof_name']
+
+            words = []
+
+            vacancies = Vacancy.query.with_entities(
+                Vacancy.vacancy_text_clean).filter(Vacancy.id.in_(prof_area['vacancies_array'])).all()
+
+            for vacancy in vacancies:
+                text = vacancy[0]
+                tokens = word_tokenize(text)
+                tokens = [i for i in tokens if (i not in string.punctuation)]
+                tokens = [i.lower() for i in tokens if (i not in stop_words)]
+
+                for word in tokens:
+                    words.append(word)
+
+            words_counter = Counter(words).most_common(50)
+            norm_counter = []
+            for wc in words_counter:
+
+                norm_counter.append({'tag': wc[0], 'count': wc[1]})
+
+            prof_words_stat['words_counter'] = norm_counter
+
+            words_stat.append(prof_words_stat)
+
+    with open('words_stat.json', mode='w+', encoding='utf8') as f:
+        json.dump(words_stat, f, ensure_ascii=False,)
 
 
 def copy_vacancies():
@@ -24,7 +78,6 @@ def copy_vacancies():
         if check_url is None:
             get_new_vacancy = SpyderVacancies.query.filter(
                 SpyderVacancies.vacancy_url == url[0]).first()
-
 
             set_new_vacancy = Vacancy(
                 vacancy_url=get_new_vacancy.vacancy_url,
