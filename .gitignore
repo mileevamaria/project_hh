@@ -9,4 +9,4 @@ hh_log.txt
 node_modules
 ./webapp/config.py
 webapp/config.py
-/webapp/config.py
+config.py
