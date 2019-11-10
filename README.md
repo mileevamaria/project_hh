@@ -12,7 +12,7 @@
 
 ## Run web-application
 - [Demo database](https://github.com/mileevamaria/demo_database/tree/master/project_hh)
-- [Instruction](#instruction)
+- [Instructions](#instructions)
 
 На сайте можно посмотреть вакансии, отфильтровать их по [ключевым навыкам](#skills-and-professional-areas) и профессиональным сферам, а также добавить вакансию в избранное. Вакансии на профессиональные сферы размечает [модель](https://colab.research.google.com/drive/1BsP6crvOYPihdtJ_rIx7KEms7z6nm0UE), которая также удаляет нерелеватные вакансии, выдаваемые hh по запросу "python".
 
@@ -28,7 +28,7 @@
 
 
 
-## Instruction
+## Instructions
 
 1. Cклонируйте репозиторий:
 ```bash 
@@ -46,11 +46,7 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:your_password@localhost:3306/nam
 ```bash 
 flask db upgrade
 ```
-5. В данных вакансий и навыков (которые можно взять [отсюда](https://github.com/mileevamaria/demo_database/tree/master/project_hh)), замените project_hh на называние своей базы данных:
-```python 
-Host: localhost    Database: project_hh
-```
-И затем импортируйте их в БД
+5. Заимпортируйте [данные](https://github.com/mileevamaria/demo_database/tree/master/project_hh) вакансий и навыков.
 
 6. Сделайте файл запуска исполняемым:
 ```bash 
@@ -140,7 +136,7 @@ chmod +x run.sh
 - Github
 - Mercurial
 
-**Виртуализация:***
+**Виртуализация:**
 - Docker
 - VMware
 
