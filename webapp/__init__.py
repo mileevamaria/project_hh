@@ -10,8 +10,6 @@ from webapp.statistic.views import blueprint as statistic_blueprint
 from webapp.db import db
 from webapp.user.models import User
 
-""" export FLASK_APP=webapp && FLASK_ENV=development && flask run """
-
 
 def create_app():
 
