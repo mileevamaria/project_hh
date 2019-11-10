@@ -1,4 +1,5 @@
-from webapp.model import db, Category, Skill, ProfessionalArea
+from webapp.vacancy.models import db, Category, Skill, ProfessionalArea
+from webapp.user.models import User
 
 
 def get_user_skills_from_database(user):

@@ -1,4 +1,6 @@
-from webapp.model import db, Vacancy, Statistic, ProfessionalArea, VacancyGrade, SpyderVacancies
+from webapp.db import db
+from webapp.vacancy.models import Vacancy, ProfessionalArea, VacancyGrade, SpyderVacancies
+from webapp.statistic.models import Statistic
 from sqlalchemy import func, and_
 import pandas as pd
 import numpy as np
@@ -28,7 +30,7 @@ def get_words_stat():
 
     words_stat = []
 
-    with open('vacancies_stat.json', mode='r', encoding='utf8') as f:
+    with open('data/statistic/vacancies_stat.json', mode='r', encoding='utf8') as f:
         data = json.load(f)
 
         prof_areas = data['profession_vacancies']
@@ -63,7 +65,7 @@ def get_words_stat():
 
             words_stat.append(prof_words_stat)
 
-    with open('words_stat.json', mode='w+', encoding='utf8') as f:
+    with open('data/statistic/words_stat.json', mode='w+', encoding='utf8') as f:
         json.dump(words_stat, f, ensure_ascii=False,)
 
 
@@ -206,7 +208,7 @@ def set_json_statistic():
     data['profession_vacancies'] = profession_vacancy
     data['areas_experience'] = [expirience_dict]
 
-    with open('vacancies_stat.json', mode='w+', encoding='utf8') as f:
+    with open('data/statistic/vacancies_stat.json', mode='w+', encoding='utf8') as f:
         json.dump(data, f, ensure_ascii=False,)
 
 

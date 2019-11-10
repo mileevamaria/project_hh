@@ -14,7 +14,7 @@
         <div class="col-8">
             <h3>Личная информация</h3>
             </br>
-            <form action="{{ url_for('process_save_changes_person') }}" method="POST">
+            <form action="{{ url_for('profile.process_save_changes_person') }}" method="POST">
                 {{ form.hidden_tag() }}
               <div class="form-group row">
                 {{ form.username.label(class_="col-sm-2 col-form-label") }}
@@ -52,13 +52,13 @@
                 </br>
         </div>
         <div class="col-4">
-            <form action="{{ url_for('change_password') }}" method="GET">
+            <form action="{{ url_for('profile.change_password') }}" method="GET">
                 <p>{{ form.change_password() }}</p>
             </form>
-            <form action="{{ url_for('favourite') }}" method="GET">
+            <form action="{{ url_for('profile.favourite') }}" method="GET">
                 <p>{{ form.favourite() }}</p>
             </form>
-            <form action="{{ url_for('relevant_vacancies') }}" method="GET">
+            <form action="{{ url_for('profile.relevant_vacancies') }}" method="GET">
                 <p>{{ form.relevant() }}</p>
             </form>
         </div>
@@ -68,7 +68,7 @@
              <h3>Выбрать специализацию</h3>
          </div>
     </div>
-    <form action="{{ url_for('process_save_change_skills') }}" method="POST">
+    <form action="{{ url_for('profile.process_save_change_skills') }}" method="POST">
         <div class="row">
             <div class="col-3">
                 </br>

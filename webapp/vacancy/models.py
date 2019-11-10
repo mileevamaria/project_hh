@@ -1,9 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
 from sqlalchemy.sql import func
-from werkzeug.security import generate_password_hash, check_password_hash
 
-db = SQLAlchemy()
+from webapp.user.models import assoc_area_user, assoc_skill_user
+from webapp.db import db
 
 
 class Vacancy(db.Model):
@@ -36,58 +34,6 @@ class Vacancy(db.Model):
         'VacancyGrade', backref='vacancy_grades', lazy=True)
 
 
-assoc_skill_user = db.Table("assoc_skill_user",
-                            db.Column("user_id", db.Integer,
-                                      db.ForeignKey("users.id")),
-                            db.Column("skill_id", db.Integer, db.ForeignKey("skills.id")))
-
-assoc_area_user = db.Table("assoc_area_user",
-                            db.Column("user_id", db.Integer,
-                                      db.ForeignKey("users.id")),
-                            db.Column("area_id", db.Integer, db.ForeignKey("prof_areas.id")))
-
-
-class User(db.Model, UserMixin):
-    __tablename__ = "users"
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(50))
-    password = db.Column(db.String(128))
-    role = db.Column(db.String(10), index=True)
-    first_name = db.Column(db.String(80), nullable=True, server_default='Имя')
-    last_name = db.Column(db.String(80), nullable=True,
-                          server_default='Фамилия')
-    city = db.Column(db.String(80), nullable=True, server_default='Город')
-    user = db.relationship('Skill', secondary=assoc_skill_user,
-                           backref=db.backref('user', lazy='dynamic'))
-    user_1 = db.relationship('ProfessionalArea', secondary=assoc_area_user,
-                           backref=db.backref('user', lazy='dynamic'))
-    favourites = db.relationship('Favourite', backref='user_favourite')
-
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
-    @property
-    def is_admin(self):
-        return self.role == 'admin'
-
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
-
-
-class Favourite(db.Model):
-    __tablename__ = "favourite_vacancies"
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    vacancy_id = db.Column(db.Integer, db.ForeignKey(
-        'vacancies.id'), nullable=False)
-
-
 assoc_skill_category = db.Table("assoc_skill_category",
                                 db.Column("skill_id", db.Integer,
                                           db.ForeignKey("skills.id")),
@@ -109,19 +55,6 @@ class Skill(db.Model):
     count = db.Column(db.Integer, nullable=True)
     category = db.relationship('Category', secondary=assoc_skill_category, backref=db.backref('catskill', lazy='dynamic'))
     skill = db.relationship('User', secondary=assoc_skill_user, backref=db.backref('user_skill', lazy='dynamic'))
-
-
-class Statistic(db.Model):
-    __tablename__ = "statistic"
-
-    id = db.Column(db.Integer, primary_key=True)
-    vacancy_count = db.Column(db.Integer, nullable=True)
-    languages = db.Column(db.TEXT, nullable=True)
-    grades = db.Column(db.TEXT, nullable=True)
-    ungraded_vacancies = db.Column(db.TEXT, nullable=True)
-    words = db.Column(db.TEXT, nullable=True)
-    created_at = db.Column(
-        db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
 
 
 class ProfessionalArea(db.Model):
@@ -149,8 +82,8 @@ class VacancyGrade(db.Model):
         'prof_areas.id'), nullable=False)
     grade = db.Column(db.DECIMAL(18, 17), nullable=True)
 
-class SpyderVacancies(db.Model):
 
+class SpyderVacancies(db.Model):
     __tablename__ = 'vacancies_spyder'
 
     id = db.Column(db.Integer, primary_key=True)

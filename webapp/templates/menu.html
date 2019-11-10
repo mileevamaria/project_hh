@@ -8,17 +8,17 @@
     <ul class="navbar-nav mr-auto">
         {% if current_user.is_authenticated %}
           <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('profile') }}">Профиль </a>
+            <a class="nav-link" href="{{ url_for('profile.profile') }}">Профиль </a>
           </li>
         <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('favourite') }}">Избранные </a>
+            <a class="nav-link" href="{{ url_for('profile.favourite') }}">Избранные </a>
           </li>
         <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('relevant_vacancies') }}">Подходящие </a>
+            <a class="nav-link" href="{{ url_for('profile.relevant_vacancies') }}">Подходящие </a>
           </li>
         {% endif %}
         <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('statistic') }}">Статистика вакансий </a>
+            <a class="nav-link" href="{{ url_for('statistic.statistic') }}">Статистика вакансий </a>
           </li>
     </ul>
     <ul class="navbar-nav">
@@ -32,14 +32,14 @@
             </li>
           {% endif %}
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('logout') }}">Выйти</a>
+            <a class="nav-link" href="{{ url_for('user.logout') }}">Выйти</a>
           </li>
         {% else %}
           <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('register') }}">Регистрация</a>
+              <a class="nav-link" href="{{ url_for('user.register') }}">Регистрация</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('login') }}">Войти</a>
+              <a class="nav-link" href="{{ url_for('user.login') }}">Войти</a>
             </li>
         {% endif %}
     </ul>
