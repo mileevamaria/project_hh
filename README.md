@@ -2,7 +2,7 @@
 
 
 ## Stack
-- **Back-end**: flask, wtforms, sqlalchemy, migrations
+- **Back-end**: flask, wtforms, sqlalchemy, migrations, blueprints
 - **Front-end**: bootstrap
 - **Database**: mysql
 - **Parser**: scrapy
